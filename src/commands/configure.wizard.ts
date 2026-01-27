@@ -51,13 +51,13 @@ async function promptConfigureSection(
 ): Promise<ConfigureSectionChoice> {
   return guardCancel(
     await select<ConfigureSectionChoice>({
-      message: "Select sections to configure",
+      message: "选择要配置的部分",
       options: [
         ...CONFIGURE_SECTION_OPTIONS,
         {
           value: "__continue",
-          label: "Continue",
-          hint: hasSelection ? "Done" : "Skip for now",
+          label: "继续",
+          hint: hasSelection ? "完成" : "暂时跳过",
         },
       ],
       initialValue: CONFIGURE_SECTION_OPTIONS[0]?.value,
@@ -69,17 +69,17 @@ async function promptConfigureSection(
 async function promptChannelMode(runtime: RuntimeEnv): Promise<ChannelsWizardMode> {
   return guardCancel(
     await select({
-      message: "Channels",
+      message: "渠道",
       options: [
         {
           value: "configure",
-          label: "Configure/link",
-          hint: "Add/update channels; disable unselected accounts",
+          label: "配置/连接",
+          hint: "添加/更新渠道；禁用未选中的账户",
         },
         {
           value: "remove",
-          label: "Remove channel config",
-          hint: "Delete channel tokens/settings from clawdbot.json",
+          label: "删除渠道配置",
+          hint: "从 clawdbot.json 中删除渠道令牌/设置",
         },
       ],
       initialValue: "configure",
@@ -98,16 +98,16 @@ async function promptWebToolsConfig(
 
   note(
     [
-      "Web search lets your agent look things up online using the `web_search` tool.",
-      "It requires a Brave Search API key (you can store it in the config or set BRAVE_API_KEY in the Gateway environment).",
-      "Docs: https://docs.clawd.bot/tools/web",
+      "Web 搜索让你的助手可以使用 `web_search` 工具在线查找信息。",
+      "需要 Brave Search API 密钥（你可以将其存储在配置中或在网关环境中设置 BRAVE_API_KEY）。",
+      "文档：https://docs.clawd.bot/tools/web",
     ].join("\n"),
-    "Web search",
+    "Web 搜索",
   );
 
   const enableSearch = guardCancel(
     await confirm({
-      message: "Enable web_search (Brave Search)?",
+      message: "启用 web_search (Brave Search)？",
       initialValue: existingSearch?.enabled ?? hasSearchKey,
     }),
     runtime,
@@ -122,9 +122,9 @@ async function promptWebToolsConfig(
     const keyInput = guardCancel(
       await text({
         message: hasSearchKey
-          ? "Brave Search API key (leave blank to keep current or use BRAVE_API_KEY)"
-          : "Brave Search API key (paste it here; leave blank to use BRAVE_API_KEY)",
-        placeholder: hasSearchKey ? "Leave blank to keep current" : "BSA...",
+          ? "Brave Search API 密钥（留空保持当前设置或使用 BRAVE_API_KEY）"
+          : "Brave Search API 密钥（粘贴在此处；留空使用 BRAVE_API_KEY）",
+        placeholder: hasSearchKey ? "留空保持当前设置" : "BSA...",
       }),
       runtime,
     );
@@ -134,18 +134,18 @@ async function promptWebToolsConfig(
     } else if (!hasSearchKey) {
       note(
         [
-          "No key stored yet, so web_search will stay unavailable.",
-          "Store a key here or set BRAVE_API_KEY in the Gateway environment.",
-          "Docs: https://docs.clawd.bot/tools/web",
+          "尚未存储密钥，web_search 将保持不可用。",
+          "请在此处存储密钥或在网关环境中设置 BRAVE_API_KEY。",
+          "文档：https://docs.clawd.bot/tools/web",
         ].join("\n"),
-        "Web search",
+        "Web 搜索",
       );
     }
   }
 
   const enableFetch = guardCancel(
     await confirm({
-      message: "Enable web_fetch (keyless HTTP fetch)?",
+      message: "启用 web_fetch（无密钥 HTTP 获取）？",
       initialValue: existingFetch?.enabled ?? true,
     }),
     runtime,
@@ -175,28 +175,28 @@ export async function runConfigureWizard(
 ) {
   try {
     printWizardHeader(runtime);
-    intro(opts.command === "update" ? "Clawdbot update wizard" : "Clawdbot configure");
+    intro(opts.command === "update" ? "Clawdbot 更新向导" : "Clawdbot 配置");
     const prompter = createClackPrompter();
 
     const snapshot = await readConfigFileSnapshot();
     const baseConfig: ClawdbotConfig = snapshot.valid ? snapshot.config : {};
 
     if (snapshot.exists) {
-      const title = snapshot.valid ? "Existing config detected" : "Invalid config";
+      const title = snapshot.valid ? "检测到现有配置" : "无效配置";
       note(summarizeExistingConfig(baseConfig), title);
       if (!snapshot.valid && snapshot.issues.length > 0) {
         note(
           [
             ...snapshot.issues.map((iss) => `- ${iss.path}: ${iss.message}`),
             "",
-            "Docs: https://docs.clawd.bot/gateway/configuration",
+            "文档：https://docs.clawd.bot/gateway/configuration",
           ].join("\n"),
-          "Config issues",
+          "配置问题",
         );
       }
       if (!snapshot.valid) {
         outro(
-          `Config invalid. Run \`${formatCliCommand("clawdbot doctor")}\` to repair it, then re-run configure.`,
+          `配置无效。请运行 \`${formatCliCommand("clawdbot doctor")}\` 修复它，然后重新运行 configure。`,
         );
         runtime.exit(1);
         return;
@@ -219,23 +219,21 @@ export async function runConfigureWizard(
 
     const mode = guardCancel(
       await select({
-        message: "Where will the Gateway run?",
+        message: "网关将在哪里运行？",
         options: [
           {
             value: "local",
-            label: "Local (this machine)",
-            hint: localProbe.ok
-              ? `Gateway reachable (${localUrl})`
-              : `No gateway detected (${localUrl})`,
+            label: "本地（此设备）",
+            hint: localProbe.ok ? `网关可达 (${localUrl})` : `未检测到网关 (${localUrl})`,
           },
           {
             value: "remote",
-            label: "Remote (info-only)",
+            label: "远程（仅信息）",
             hint: !remoteUrl
-              ? "No remote URL configured yet"
+              ? "尚未配置远程 URL"
               : remoteProbe?.ok
-                ? `Gateway reachable (${remoteUrl})`
-                : `Configured but unreachable (${remoteUrl})`,
+                ? `网关可达 (${remoteUrl})`
+                : `已配置但无法连接 (${remoteUrl})`,
           },
         ],
       }),
@@ -250,7 +248,7 @@ export async function runConfigureWizard(
       });
       await writeConfigFile(remoteConfig);
       logConfigUpdated(runtime);
-      outro("Remote gateway configured.");
+      outro("远程网关已配置。");
       return;
     }
 
@@ -288,14 +286,14 @@ export async function runConfigureWizard(
     if (opts.sections) {
       const selected = opts.sections;
       if (!selected || selected.length === 0) {
-        outro("No changes selected.");
+        outro("未选择任何更改。");
         return;
       }
 
       if (selected.includes("workspace")) {
         const workspaceInput = guardCancel(
           await text({
-            message: "Workspace directory",
+            message: "工作区目录",
             initialValue: workspaceDir,
           }),
           runtime,
@@ -355,9 +353,9 @@ export async function runConfigureWizard(
         if (!selected.includes("gateway")) {
           const portInput = guardCancel(
             await text({
-              message: "Gateway port for service install",
+              message: "服务安装的网关端口",
               initialValue: String(gatewayPort),
-              validate: (value) => (Number.isFinite(Number(value)) ? undefined : "Invalid port"),
+              validate: (value) => (Number.isFinite(Number(value)) ? undefined : "无效端口"),
             }),
             runtime,
           );
@@ -392,11 +390,11 @@ export async function runConfigureWizard(
           runtime.error(formatHealthCheckFailure(err));
           note(
             [
-              "Docs:",
+              "文档：",
               "https://docs.clawd.bot/gateway/health",
               "https://docs.clawd.bot/gateway/troubleshooting",
             ].join("\n"),
-            "Health check help",
+            "健康检查帮助",
           );
         }
       }
@@ -412,7 +410,7 @@ export async function runConfigureWizard(
         if (choice === "workspace") {
           const workspaceInput = guardCancel(
             await text({
-              message: "Workspace directory",
+              message: "工作区目录",
               initialValue: workspaceDir,
             }),
             runtime,
@@ -477,9 +475,9 @@ export async function runConfigureWizard(
           if (!didConfigureGateway) {
             const portInput = guardCancel(
               await text({
-                message: "Gateway port for service install",
+                message: "服务安装的网关端口",
                 initialValue: String(gatewayPort),
-                validate: (value) => (Number.isFinite(Number(value)) ? undefined : "Invalid port"),
+                validate: (value) => (Number.isFinite(Number(value)) ? undefined : "无效端口"),
               }),
               runtime,
             );
@@ -517,24 +515,24 @@ export async function runConfigureWizard(
             runtime.error(formatHealthCheckFailure(err));
             note(
               [
-                "Docs:",
+                "文档：",
                 "https://docs.clawd.bot/gateway/health",
                 "https://docs.clawd.bot/gateway/troubleshooting",
               ].join("\n"),
-              "Health check help",
+              "健康检查帮助",
             );
           }
         }
-      }
 
-      if (!ranSection) {
-        if (didSetGatewayMode) {
-          await persistConfig();
-          outro("Gateway mode set to local.");
+        if (!ranSection) {
+          if (didSetGatewayMode) {
+            await persistConfig();
+            outro("网关模式已设置为本地。");
+            return;
+          }
+          outro("未选择任何更改。");
           return;
         }
-        outro("No changes selected.");
-        return;
       }
     }
 
@@ -569,20 +567,20 @@ export async function runConfigureWizard(
       });
     }
     const gatewayStatusLine = gatewayProbe.ok
-      ? "Gateway: reachable"
-      : `Gateway: not detected${gatewayProbe.detail ? ` (${gatewayProbe.detail})` : ""}`;
+      ? "网关：可达"
+      : `网关：未检测到${gatewayProbe.detail ? ` (${gatewayProbe.detail})` : ""}`;
 
     note(
       [
         `Web UI: ${links.httpUrl}`,
-        `Gateway WS: ${links.wsUrl}`,
+        `网关 WS: ${links.wsUrl}`,
         gatewayStatusLine,
-        "Docs: https://docs.clawd.bot/web/control-ui",
+        "文档：https://docs.clawd.bot/web/control-ui",
       ].join("\n"),
-      "Control UI",
+      "控制界面",
     );
 
-    outro("Configure complete.");
+    outro("配置完成。");
   } catch (err) {
     if (err instanceof WizardCancelledError) {
       runtime.exit(0);
