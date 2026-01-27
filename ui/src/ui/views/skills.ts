@@ -20,6 +20,16 @@ export type SkillsProps = {
   onInstall: (skillKey: string, name: string, installId: string) => void;
 };
 
+function translateSource(source: string): string {
+  const translations: Record<string, string> = {
+    "clawdbot-bundled": "内置",
+    "clawdbot-workspace": "工作区",
+    "clawdbot-managed": "已管理",
+    "clawdbot-extra": "额外",
+  };
+  return translations[source] ?? source;
+}
+
 export function renderSkills(props: SkillsProps) {
   const skills = props.report?.skills ?? [];
   const filter = props.filter.trim().toLowerCase();
@@ -84,33 +94,36 @@ function renderSkill(skill: SkillStatusEntry, props: SkillsProps) {
     ...skill.missing.config.map((c) => `config:${c}`),
     ...skill.missing.os.map((o) => `os:${o}`),
   ];
+  const missingText = missing.length > 0 ? missing.join(", ") : "";
   const reasons: string[] = [];
   if (skill.disabled) reasons.push("已禁用");
   if (skill.blockedByAllowlist) reasons.push("被白名单阻止");
   return html`
     <div class="list-item">
       <div class="list-main">
-        <div class="list-title">
-          ${skill.emoji ? `${skill.emoji} ` : ""}${skill.name}
+        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+          <div class="list-title">
+            ${skill.emoji ? `${skill.emoji} ` : ""}${skill.name}
+          </div>
+          <div class="chip-row">
+            <span class="chip">${translateSource(skill.source)}</span>
+            <span class="chip ${skill.eligible ? "chip-ok" : "chip-warn"}>
+              ${skill.eligible ? "符合条件" : "被阻止"}
+            </span>
+            ${skill.disabled ? html`<span class="chip chip-warn">已禁用</span>` : nothing}
+          </div>
         </div>
-        <div class="list-sub">${clampText(skill.description, 140)}</div>
-        <div class="chip-row" style="margin-top: 6px;">
-          <span class="chip">${skill.source}</span>
-          <span class="chip ${skill.eligible ? "chip-ok" : "chip-warn"}>
-            ${skill.eligible ? "符合条件" : "被阻止"}
-          </span>
-          ${skill.disabled ? html`<span class="chip chip-warn">已禁用</span>` : nothing}
-        </div>
+        <div class="list-sub" style="margin-top: 4px;">${clampText(skill.description, 140)}</div>
         ${missing.length > 0
           ? html`
-              <div class="muted" style="margin-top: 6px;">
-                缺少: ${missing.join(", ")}
+              <div class="muted" style="margin-top: 6px; font-size: 11px;">
+                缺少: ${missingText}
               </div>
             `
           : nothing}
         ${reasons.length > 0
           ? html`
-              <div class="muted" style="margin-top: 6px;">
+              <div class="muted" style="margin-top: 6px; font-size: 11px;">
                 原因: ${reasons.join(", ")}
               </div>
             `
