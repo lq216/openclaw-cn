@@ -165,7 +165,13 @@ type TtsDirectiveOverrides = {
     languageCode?: string;
     voiceSettings?: Partial<ResolvedTtsConfig["elevenlabs"]["voiceSettings"]>;
   };
+  edge?: {
+    voice?: string;
+    lang?: string;
+  };
 };
+
+export type { TtsDirectiveOverrides };
 
 type TtsDirectiveParseResult = {
   cleanedText: string;
@@ -1108,6 +1114,10 @@ export async function textToSpeech(params: {
         const fallbackEdgeOutputFormat =
           edgeOutputFormat !== DEFAULT_EDGE_OUTPUT_FORMAT ? DEFAULT_EDGE_OUTPUT_FORMAT : undefined;
 
+        // Apply edge voice/lang overrides if provided
+        const edgeVoice = params.overrides?.edge?.voice ?? config.edge.voice;
+        const edgeLang = params.overrides?.edge?.lang ?? config.edge.lang;
+
         const attemptEdgeTts = async (outputFormat: string) => {
           const extension = inferEdgeExtension(outputFormat);
           const audioPath = path.join(tempDir, `voice-${Date.now()}${extension}`);
@@ -1116,6 +1126,8 @@ export async function textToSpeech(params: {
             outputPath: audioPath,
             config: {
               ...config.edge,
+              voice: edgeVoice,
+              lang: edgeLang,
               outputFormat,
             },
             timeoutMs: config.timeoutMs,
