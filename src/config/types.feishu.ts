@@ -80,4 +80,8 @@ export type FeishuAccountConfig = {
 export type FeishuConfig = {
   /** Optional per-account Feishu configuration (multi-account). */
   accounts?: Record<string, FeishuAccountConfig>;
+  /** Top-level App ID (alternative to accounts). */
+  appId?: string;
+  /** Top-level App Secret (alternative to accounts). */
+  appSecret?: string;
 } & Omit<FeishuAccountConfig, "appId" | "appSecret">;
