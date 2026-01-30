@@ -7,12 +7,12 @@ import {
   getChatChannelMeta,
   buildChannelConfigSchema,
   DEFAULT_ACCOUNT_ID,
-} from "clawdbot/plugin-sdk";
-import type { ChannelPlugin } from "../../../src/channels/plugins/types.plugin.js";
-import type { ResolvedFeishuAccount } from "../../../src/feishu/accounts.js";
-import type { ClawdbotConfig } from "../../../src/config/config.js";
-import { probeFeishu } from "../../../src/feishu/probe.js";
-import { monitorFeishuProvider } from "../../../src/feishu/monitor.js";
+  probeFeishu,
+  monitorFeishuProvider,
+  type ChannelPlugin,
+  type ResolvedFeishuAccount,
+  type ClawdbotConfig,
+} from "moltbot-cn/plugin-sdk";
 import { feishuOnboardingAdapter } from "./onboarding.js";
 import { FeishuAccountSchema } from "./config-schema.js";
 import { getFeishuRuntime } from "./runtime.js";

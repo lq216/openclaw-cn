@@ -2,7 +2,7 @@ import type {
   ChannelOnboardingAdapter,
   ClawdbotConfig,
   WizardPrompter,
-} from "clawdbot/plugin-sdk";
+} from "moltbot-cn/plugin-sdk";
 import {
   listFeishuAccountIds,
   resolveDefaultFeishuAccountId,
@@ -10,7 +10,7 @@ import {
   promptAccountId,
   normalizeAccountId,
   DEFAULT_ACCOUNT_ID,
-} from "clawdbot/plugin-sdk";
+} from "moltbot-cn/plugin-sdk";
 
 export const feishuOnboardingAdapter: ChannelOnboardingAdapter = {
   channel: "feishu",
