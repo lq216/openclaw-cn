@@ -18,7 +18,25 @@
   "openclaw": {
     "extensions": [
       "./index.ts"
-    ]
+    ],
+    "channel": {
+      "id": "feishu",
+      "label": "Feishu",
+      "selectionLabel": "Feishu (Lark Open Platform)",
+      "docsPath": "/channels/feishu",
+      "docsLabel": "feishu",
+      "blurb": "飞书/Lark 机器人集成 (WebSocket)。",
+      "aliases": [
+        "lark"
+      ],
+      "order": 35,
+      "quickstartAllowFrom": true
+    },
+    "install": {
+      "npmSpec": "@openclaw-cn/feishu",
+      "localPath": "extensions/feishu",
+      "defaultChoice": "local"
+    }
   },
   "description": "Feishu (Larksuite) channel plugin for OpenClaw Chinese",
   "keywords": ["openclaw", "plugin", "feishu", "larksuite"],

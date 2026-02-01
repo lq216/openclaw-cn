@@ -1,0 +1,26 @@
+# Extensions build artifacts (each extension is published as a separate npm package)
+extensions/*/dist/
+extensions/*/node_modules/
+
+# Development files
+*.test.ts
+*.test.js
+**/*.test.ts
+**/*.test.js
+vitest.*.ts
+tsconfig.json
+
+# Git files
+.git*
+.github/
+
+# IDE/Editor
+.vscode/
+.idea/
+
+# Misc
+.DS_Store
+**/.DS_Store
+coverage/
+.pnpm-debug.log
+*.tsbuildinfo
