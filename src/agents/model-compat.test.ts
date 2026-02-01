@@ -16,6 +16,20 @@ const baseModel = (): Model<Api> =>
     maxTokens: 1024,
   }) as Model<Api>;
 
+const xiaomiModel = (): Model<Api> =>
+  ({
+    id: "mimo-v2-flash",
+    name: "MiMo V2 Flash",
+    api: "openai-completions",
+    provider: "xiaomi",
+    baseUrl: "https://api.xiaomimimo.com/v1",
+    reasoning: true,
+    input: ["text"],
+    cost: { input: 0.7, output: 2.1, cacheRead: 0.07, cacheWrite: 0 },
+    contextWindow: 131072,
+    maxTokens: 65536,
+  }) as Model<Api>;
+
 describe("normalizeModelCompat", () => {
   it("forces supportsDeveloperRole off for z.ai models", () => {
     const model = baseModel();
@@ -24,7 +38,25 @@ describe("normalizeModelCompat", () => {
     expect(normalized.compat?.supportsDeveloperRole).toBe(false);
   });
 
-  it("leaves non-zai models untouched", () => {
+  it("forces supportsDeveloperRole off for xiaomi models", () => {
+    const model = xiaomiModel();
+    delete (model as { compat?: unknown }).compat;
+    const normalized = normalizeModelCompat(model);
+    expect(normalized.compat?.supportsDeveloperRole).toBe(false);
+  });
+
+  it("forces supportsDeveloperRole off for xiaomi baseUrl", () => {
+    const model = {
+      ...xiaomiModel(),
+      provider: "custom",
+      baseUrl: "https://api.xiaomimimo.com/v1",
+    };
+    delete (model as { compat?: unknown }).compat;
+    const normalized = normalizeModelCompat(model);
+    expect(normalized.compat?.supportsDeveloperRole).toBe(false);
+  });
+
+  it("leaves non-zai and non-xiaomi models untouched", () => {
     const model = {
       ...baseModel(),
       provider: "openai",
@@ -37,6 +69,13 @@ describe("normalizeModelCompat", () => {
 
   it("does not override explicit z.ai compat false", () => {
     const model = baseModel();
+    model.compat = { supportsDeveloperRole: false };
+    const normalized = normalizeModelCompat(model);
+    expect(normalized.compat?.supportsDeveloperRole).toBe(false);
+  });
+
+  it("does not override explicit xiaomi compat false", () => {
+    const model = xiaomiModel();
     model.compat = { supportsDeveloperRole: false };
     const normalized = normalizeModelCompat(model);
     expect(normalized.compat?.supportsDeveloperRole).toBe(false);

@@ -5,9 +5,14 @@ function isOpenAiCompletionsModel(model: Model<Api>): model is Model<"openai-com
 }
 
 export function normalizeModelCompat(model: Model<Api>): Model<Api> {
+  if (!isOpenAiCompletionsModel(model)) return model;
+
   const baseUrl = model.baseUrl ?? "";
+  // Providers that don't support developer role (must use system role instead)
   const isZai = model.provider === "zai" || baseUrl.includes("api.z.ai");
-  if (!isZai || !isOpenAiCompletionsModel(model)) return model;
+  const isXiaomi = model.provider === "xiaomi" || baseUrl.includes("api.xiaomimimo.com");
+
+  if (!isZai && !isXiaomi) return model;
 
   const openaiModel = model as Model<"openai-completions">;
   const compat = openaiModel.compat ?? undefined;

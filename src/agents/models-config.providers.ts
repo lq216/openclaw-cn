@@ -460,6 +460,9 @@ export function buildVolcengineProvider(): ProviderConfig {
 
 export const XIAOMI_API_BASE_URL = "https://api.xiaomimimo.com/v1";
 
+// Xiaomi MiMo API does not support the developer role (returns 400 Param Incorrect)
+const XIAOMI_COMPAT = { supportsDeveloperRole: false } as const;
+
 export function buildXiaomiProvider(): ProviderConfig {
   return {
     baseUrl: XIAOMI_API_BASE_URL,
@@ -473,6 +476,7 @@ export function buildXiaomiProvider(): ProviderConfig {
         cost: { input: 0.7, output: 2.1, cacheRead: 0.07, cacheWrite: 0 },
         contextWindow: 131072,
         maxTokens: 65536,
+        compat: XIAOMI_COMPAT,
       },
     ],
   };

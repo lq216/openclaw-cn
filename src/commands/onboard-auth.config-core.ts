@@ -772,10 +772,8 @@ export function applyVolcengineConfig(cfg: ClawdbotConfig, modelId: string): Cla
   };
 }
 
-export function applyXiaomiProviderConfig(
-  cfg: ClawdbotConfig,
-  modelId: string,
-): ClawdbotConfig {
+export function applyXiaomiProviderConfig(cfg: ClawdbotConfig, modelId: string): ClawdbotConfig {
+  const XIAOMI_COMPAT = { supportsDeveloperRole: false } as const;
   const models = { ...cfg.agents?.defaults?.models };
   const modelRef = `xiaomi/${modelId}`;
   models[modelRef] = {
@@ -803,6 +801,7 @@ export function applyXiaomiProviderConfig(
               cost: { input: 0.7, output: 2.1, cacheRead: 0.07, cacheWrite: 0 },
               contextWindow: 131072,
               maxTokens: 65536,
+              compat: XIAOMI_COMPAT,
             },
           ]
       : defaultModels.length > 0
@@ -816,6 +815,7 @@ export function applyXiaomiProviderConfig(
               cost: { input: 0.7, output: 2.1, cacheRead: 0.07, cacheWrite: 0 },
               contextWindow: 131072,
               maxTokens: 65536,
+              compat: XIAOMI_COMPAT,
             },
           ];
 
