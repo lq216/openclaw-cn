@@ -95,6 +95,20 @@ pnpm openclaw-cn onboard --install-daemon
 
 版本格式：`vYYYY.M.D-cn.N`（如 `v2026.1.24-cn.3`）
 
+### 🛠️ 上游合并工具
+
+为了安全地合并上游更新，我们提供了完整的工具链：
+
+- 📘 **[快速开始指南](QUICKSTART_MERGE.md)** - 5 分钟了解合并流程
+- 📖 **[详细策略文档](MERGE_UPSTREAM_STRATEGY.md)** - 完整的合并策略和最佳实践
+- 📊 **[流程图](MERGE_FLOW_DIAGRAM.md)** - 可视化流程和决策树
+- 🔧 **[辅助脚本](scripts/merge-helpers/)** - 自动化工具集
+
+**一键启动合并向导**：
+```bash
+./scripts/merge-helpers/merge-wizard.sh
+```
+
 ## 🤝 参与贡献
 
 欢迎提交 Issue 和 PR！
