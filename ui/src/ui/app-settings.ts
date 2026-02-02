@@ -98,7 +98,11 @@ export function applySettingsFromUrl(host: SettingsHost) {
   if (gatewayUrlRaw != null) {
     const gatewayUrl = gatewayUrlRaw.trim();
     if (gatewayUrl && gatewayUrl !== host.settings.gatewayUrl) {
-      applySettings(host, { ...host.settings, gatewayUrl });
+      // Security: Do NOT auto-apply gatewayUrl from URL params.
+      // Store as pending and require user confirmation to prevent
+      // malicious redirect attacks (CVE: GHSA-g8p2-7wf7-98mq).
+      // The confirmation modal should be shown by the app.
+      (host as { pendingGatewayUrl?: string }).pendingGatewayUrl = gatewayUrl;
     }
     params.delete("gatewayUrl");
     shouldCleanUrl = true;
