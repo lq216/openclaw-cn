@@ -23,6 +23,11 @@ npm i -g openclaw-cn@latest && openclaw-cn doctor && openclaw-cn gateway restart
 npm i -g openclaw-cn@latest; openclaw-cn doctor; openclaw-cn gateway restart
 ```
 
+**WSL 用户注意**：WSL 环境需要启用 systemd 才能使用 `gateway restart`。如果遇到 "Failed to connect to bus" 错误，请参考 [WSL 启用 systemd 指南](/gateway/troubleshooting#web-ui-1006-no-reason) 或使用前台模式运行：
+```bash
+openclaw-cn gateway run
+```
+
 这会：更新到最新版本 → 运行诊断修复 → 重启 Gateway。
 
 ## 逐步更新指南
