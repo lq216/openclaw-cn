@@ -363,11 +363,19 @@ vLLM 是高性能的本地推理服务器：
 | `apiKey` | ✅ | API 密钥，支持 `${ENV_VAR}` 引用 | - |
 | `api` | ✅ | API 协议类型 | - |
 | `models` | ✅ | 模型列表 | - |
-| `models[].id` | ✅ | 模型 ID | - |
+| `models[].id` | ✅ | 模型 ID（**不含 provider 前缀**） | - |
 | `models[].name` | ❌ | 显示名称 | 使用 id |
 | `models[].reasoning` | ❌ | 推理模式支持 | `false` |
 | `models[].contextWindow` | ❌ | 上下文窗口 | `200000` |
 | `models[].maxTokens` | ❌ | 最大输出 | `8192` |
+
+> ⚠️ **重要**：`models[].id` 字段只填写模型名称，**不要包含 provider 前缀**。
+>
+> 例如，配置硅基流动的 MiniMax 模型：
+> - ✅ 正确：`"id": "Pro/MiniMaxAI/MiniMax-M2.1"`
+> - ❌ 错误：`"id": "siliconflow/Pro/MiniMaxAI/MiniMax-M2.1"`
+>
+> 系统会自动将 provider 名称和 model id 组合成完整引用（如 `siliconflow/Pro/MiniMaxAI/MiniMax-M2.1`），用于 `agents.defaults.model.primary` 等配置项。
 
 ---
 
@@ -452,7 +460,7 @@ curl -H "Authorization: Bearer $API_KEY" https://api.example.com/v1/models
 
 ```json5
 models: [
-  { id: "正确的模型ID", name: "显示名称" }
+  { id: "正确的模型ID", name: "显示名称" }  // id 不要包含 provider 前缀
 ]
 ```
 
