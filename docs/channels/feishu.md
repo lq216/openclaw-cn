@@ -410,6 +410,69 @@ openclaw-cn pairing list feishu
 
 飞书目前不支持消息编辑，因此默认禁用流式输出（`blockStreaming: true`）。机器人会等待完整回复后一次性发送。
 
+### 多 Agent 路由
+
+通过 `bindings` 配置，您可以用一个飞书机器人对接多个不同功能或性格的 Agent。系统会根据用户 ID 或群组 ID 自动将对话分发到对应的 Agent。
+
+**配置示例**：
+
+```json5
+{
+  agents: {
+    list: [
+      { id: "main" },
+      {
+        id: "clawd-fan",
+        workspace: "/home/user/clawd-fan",
+        agentDir: "/home/user/.openclaw/agents/clawd-fan/agent"
+      },
+      {
+        id: "clawd-xi",
+        workspace: "/home/user/clawd-xi",
+        agentDir: "/home/user/.openclaw/agents/clawd-xi/agent"
+      }
+    ]
+  },
+  bindings: [
+    {
+      // 用户 A 的私聊 → main agent
+      agentId: "main",
+      match: {
+        channel: "feishu",
+        peer: { kind: "dm", id: "ou_28b31a88..." }
+      }
+    },
+    {
+      // 用户 B 的私聊 → clawd-fan agent
+      agentId: "clawd-fan",
+      match: {
+        channel: "feishu",
+        peer: { kind: "dm", id: "ou_0fe6b1c9..." }
+      }
+    },
+    {
+      // 某个群组 → clawd-xi agent
+      agentId: "clawd-xi",
+      match: {
+        channel: "feishu",
+        peer: { kind: "group", id: "oc_xxx..." }
+      }
+    }
+  ]
+}
+```
+
+**匹配规则说明**：
+
+| 字段 | 说明 |
+|------|------|
+| `agentId` | 目标 Agent 的 ID，需要在 `agents.list` 中定义 |
+| `match.channel` | 渠道类型，这里固定为 `"feishu"` |
+| `match.peer.kind` | 对话类型：`"dm"`（私聊）或 `"group"`（群组） |
+| `match.peer.id` | 用户 Open ID（`ou_xxx`）或群组 ID（`oc_xxx`） |
+
+**获取 ID 的方法**：参见上文 [获取群组/用户 ID](#获取群组用户-id) 章节。
+
 ---
 
 ## 配置参考
