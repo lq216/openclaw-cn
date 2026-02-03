@@ -5,6 +5,7 @@ import { loadConfig } from "../config/config.js";
 import { logVerbose } from "../globals.js";
 import { getChildLogger } from "../logging.js";
 import { isSenderAllowed, normalizeAllowFromWithStore, resolveSenderAllowMatch } from "./access.js";
+import { resolveAgentRoute } from "../routing/resolve-route.js";
 import {
   resolveFeishuConfig,
   resolveFeishuGroupConfig,
@@ -56,6 +57,17 @@ export async function processFeishuMessage(
   const senderId = sender?.sender_id?.open_id || sender?.sender_id?.user_id || "unknown";
   const senderUnionId = sender?.sender_id?.union_id;
   const maxMediaBytes = feishuCfg.mediaMaxMb * 1024 * 1024;
+
+  // Resolve agent route
+  const route = resolveAgentRoute({
+    cfg,
+    channel: "feishu",
+    accountId,
+    peer: {
+      kind: isGroup ? "group" : "dm",
+      id: isGroup ? chatId : senderId,
+    },
+  });
 
   // Check if this is a supported message type
   if (!SUPPORTED_MSG_TYPES.includes(msgType)) {
@@ -244,6 +256,7 @@ export async function processFeishuMessage(
     RawBody: text || media?.placeholder || "",
     From: senderId,
     To: chatId,
+    SessionKey: route.sessionKey,
     SenderId: senderId,
     SenderName: senderName,
     ChatType: isGroup ? "group" : "dm",
@@ -251,7 +264,7 @@ export async function processFeishuMessage(
     Surface: "feishu",
     Timestamp: Number(message.create_time),
     MessageSid: message.message_id,
-    AccountId: accountId,
+    AccountId: route.accountId,
     OriginatingChannel: "feishu",
     OriginatingTo: chatId,
     // Media fields (similar to Telegram)
@@ -326,7 +339,18 @@ export async function processFeishuMessage(
         }
       },
       onError: (err) => {
-        logger.error(`Reply error: ${String(err)}`);
+        const msg = String(err);
+        if (
+          msg.includes("permission") ||
+          msg.includes("forbidden") ||
+          msg.includes("code: 99991660")
+        ) {
+          logger.error(
+            `Reply error: ${msg} (Check if "im:message" or "im:resource" permissions are enabled in Feishu Console)`,
+          );
+        } else {
+          logger.error(`Reply error: ${msg}`);
+        }
         // Clean up streaming session on error
         if (streamingSession?.isActive()) {
           streamingSession.close().catch(() => {});
@@ -340,7 +364,14 @@ export async function processFeishuMessage(
             streamingStarted = true;
             logger.debug(`Started streaming card for chat ${chatId}`);
           } catch (err) {
-            logger.warn(`Failed to start streaming card: ${String(err)}`);
+            const msg = String(err);
+            if (msg.includes("permission") || msg.includes("forbidden")) {
+              logger.warn(
+                `Failed to start streaming card: ${msg} (Check if "im:resource:msg:send" or card permissions are enabled)`,
+              );
+            } else {
+              logger.warn(`Failed to start streaming card: ${msg}`);
+            }
             // Continue without streaming
           }
         }
