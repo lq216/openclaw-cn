@@ -1,6 +1,6 @@
 {
   "name": "openclaw-cn",
-  "version": "2026.2.4",
+  "version": "2026.2.4.1",
   "description": "Openclaw 中文版 - WhatsApp gateway CLI (Baileys web) with Pi RPC agent",
   "repository": {
     "type": "git",
@@ -248,6 +248,12 @@
     "typescript": "^5.9.3",
     "vitest": "^4.0.18",
     "wireit": "^0.14.12"
+  },
+  "overrides": {
+    "libsignal": "npm:@openclaw-cn/libsignal@2.0.1"
+  },
+  "resolutions": {
+    "libsignal": "npm:@openclaw-cn/libsignal@2.0.1"
   },
   "pnpm": {
     "minimumReleaseAge": 2880,

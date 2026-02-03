@@ -2,6 +2,14 @@
 
 Docs: https://docs.clawd.bot
 
+## 2026.2.4.1
+
+### 🔧 修复（Fixes）
+
+- Dependencies: 完善 libsignal 依赖替换，添加 npm `overrides` 和 yarn `resolutions` 支持，修复 npm/yarn 用户仍遇到 git 依赖安装失败的问题
+
+---
+
 ## 2026.2.4
 
 ### ✨ 新功能（Features）
