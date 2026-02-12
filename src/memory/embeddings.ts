@@ -159,6 +159,17 @@ export async function createEmbeddingProvider(
       }
     }
 
+    // All cloud providers failed (missing API keys). Try local as last resort
+    // — this allows auto-download of the default HF model via node-llama-cpp.
+    if (!localError) {
+      try {
+        const local = await createProvider("local");
+        return { ...local, requestedProvider };
+      } catch (err) {
+        localError = formatLocalSetupError(err);
+      }
+    }
+
     const details = [...missingKeyErrors, localError].filter(Boolean) as string[];
     if (details.length > 0) {
       throw new Error(details.join("\n\n"));
