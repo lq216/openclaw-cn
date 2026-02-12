@@ -1,5 +1,6 @@
 import { html, nothing } from "lit";
 import { repeat } from "lit/directives/repeat.js";
+import { ref } from "lit/directives/ref.js";
 import type { SessionsListResult } from "../types";
 import type { ChatAttachment, ChatQueueItem } from "../ui-types";
 import type { ChatItem, MessageGroup } from "../types/chat-types";
@@ -41,6 +42,8 @@ export type ChatProps = {
   connected: boolean;
   canSend: boolean;
   disabledReason: string | null;
+  // 发送键偏好：true=回车发送；false=Ctrl/⌘+回车发送
+  sendOnEnter: boolean;
   error: string | null;
   sessions: SessionsListResult | null;
   // Focus mode
@@ -192,7 +195,9 @@ export function renderChat(props: ChatProps) {
   const composePlaceholder = props.connected
     ? hasAttachments
       ? "添加消息或粘贴更多图片..."
-      : "消息（回车发送，Shift+回车换行，可粘贴图片）"
+      : props.sendOnEnter
+        ? "消息（回车发送，Shift+回车换行，可粘贴图片）"
+        : "消息（回车换行，Ctrl/⌘+回车发送，可粘贴图片）"
     : "连接到网关以开始聊天…";
 
   const splitRatio = props.splitRatio ?? 0.6;
@@ -327,15 +332,37 @@ export function renderChat(props: ChatProps) {
           <label class="field chat-compose__field">
             <span>消息</span>
             <textarea
+              ${ref((el: Element | undefined | null) => {
+                const ta = el as HTMLTextAreaElement | null;
+                if (!ta) return;
+                // 自动高度：最多占屏幕高度的 50%，上限 320px
+                const autosize = () => {
+                  const max = Math.min(Math.round(window.innerHeight * 0.5), 320);
+                  ta.style.height = "auto";
+                  ta.style.height = Math.min(ta.scrollHeight, max) + "px";
+                };
+                queueMicrotask(autosize);
+                ta.addEventListener("input", autosize);
+              })}
               .value=${props.draft}
               ?disabled=${!props.connected}
               @keydown=${(e: KeyboardEvent) => {
                 if (e.key !== "Enter") return;
                 if (e.isComposing || e.keyCode === 229) return;
-                if (e.shiftKey) return; // 允许Shift+回车换行
-                if (!props.connected) return;
-                e.preventDefault();
-                if (canCompose) props.onSend();
+                if (props.sendOnEnter) {
+                  // 回车发送；Shift+回车换行
+                  if (e.shiftKey) return;
+                  if (!props.connected) return;
+                  e.preventDefault();
+                  if (canCompose) props.onSend();
+                } else {
+                  // 回车换行；Ctrl/⌘+回车发送
+                  const metaOrCtrl = e.metaKey || e.ctrlKey;
+                  if (!metaOrCtrl) return; // 普通回车 = 换行
+                  if (!props.connected) return;
+                  e.preventDefault();
+                  if (canCompose) props.onSend();
+                }
               }}
               @input=${(e: Event) =>
                 props.onDraftChange((e.target as HTMLTextAreaElement).value)}

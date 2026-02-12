@@ -463,6 +463,7 @@ export function renderApp(state: AppViewState) {
               connected: state.connected,
               canSend: state.connected,
               disabledReason: chatDisabledReason,
+              sendOnEnter: state.settings.sendOnEnter,
               error: state.lastError,
               sessions: state.sessionsResult,
               focusMode: chatFocus,

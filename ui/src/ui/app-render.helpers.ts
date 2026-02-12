@@ -128,6 +128,21 @@ export function renderChatControls(state: AppViewState) {
       >
         ${focusIcon}
       </button>
+      <label class="field chat-controls__session" title="发送键偏好">
+        <select
+          .value=${state.settings.sendOnEnter ? "enter" : "ctrl"}
+          @change=${(e: Event) => {
+            const v = (e.target as HTMLSelectElement).value;
+            state.applySettings({
+              ...state.settings,
+              sendOnEnter: v === "enter",
+            });
+          }}
+        >
+          <option value="enter">回车发送</option>
+          <option value="ctrl">Ctrl/⌘+回车发送</option>
+        </select>
+      </label>
     </div>
   `;
 }

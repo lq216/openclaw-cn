@@ -10,6 +10,8 @@ export type UiSettings = {
   theme: ThemeMode;
   chatFocusMode: boolean;
   chatShowThinking: boolean;
+  // 发送键偏好：true=回车发送（Shift+回车换行）；false=回车换行（Ctrl/⌘+回车发送）
+  sendOnEnter: boolean;
   splitRatio: number; // Sidebar split ratio (0.4 to 0.7, default 0.6)
   navCollapsed: boolean; // Collapsible sidebar state
   navGroupsCollapsed: Record<string, boolean>; // Which nav groups are collapsed
@@ -29,6 +31,7 @@ export function loadSettings(): UiSettings {
     theme: "system",
     chatFocusMode: false,
     chatShowThinking: true,
+    sendOnEnter: true,
     splitRatio: 0.6,
     navCollapsed: false,
     navGroupsCollapsed: {},
@@ -69,6 +72,10 @@ export function loadSettings(): UiSettings {
         typeof parsed.chatShowThinking === "boolean"
           ? parsed.chatShowThinking
           : defaults.chatShowThinking,
+      sendOnEnter:
+        typeof (parsed as Partial<UiSettings>).sendOnEnter === "boolean"
+          ? (parsed as Partial<UiSettings>).sendOnEnter as boolean
+          : defaults.sendOnEnter,
       splitRatio:
         typeof parsed.splitRatio === "number" &&
         parsed.splitRatio >= 0.4 &&
