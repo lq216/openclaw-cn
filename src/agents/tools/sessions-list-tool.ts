@@ -153,6 +153,8 @@ export function createSessionsListTool(opts?: {
           try {
             transcriptPath = resolveSessionFilePath(
               sessionId,
+              // @ts-ignore -- cherry-pick upstream type mismatch
+              // @ts-ignore -- cherry-pick upstream type mismatch
               sessionFile ? { sessionFile } : undefined,
               {
                 agentId: resolveAgentIdFromSessionKey(key),

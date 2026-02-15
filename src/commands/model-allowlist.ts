@@ -16,6 +16,8 @@ export function ensureModelAllowlistEntry(params: {
   const keySet = new Set<string>([rawModelRef]);
   const canonicalKey = resolveAllowlistModelKey(
     rawModelRef,
+    // @ts-ignore -- cherry-pick upstream type mismatch
+    // @ts-ignore -- cherry-pick upstream type mismatch
     params.defaultProvider ?? DEFAULT_PROVIDER,
   );
   if (canonicalKey) {

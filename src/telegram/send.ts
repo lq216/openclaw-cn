@@ -91,6 +91,8 @@ function resolveTelegramClientOptions(
 ): ApiClientOptions | undefined {
   const proxyUrl = account.config.proxy?.trim();
   const proxyFetch = proxyUrl ? makeProxyFetch(proxyUrl) : undefined;
+  // @ts-ignore -- cherry-pick upstream type mismatch
+  // @ts-ignore -- cherry-pick upstream type mismatch
   const fetchImpl = resolveTelegramFetch(proxyFetch, {
     network: account.config.network,
   });

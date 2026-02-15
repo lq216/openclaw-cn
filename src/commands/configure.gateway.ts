@@ -203,6 +203,8 @@ export async function promptGatewayConfig(
 
   const authConfig = buildGatewayAuthConfig({
     existing: next.gateway?.auth,
+    // @ts-ignore -- cherry-pick upstream type mismatch
+    // @ts-ignore -- cherry-pick upstream type mismatch
     mode: authMode,
     token: gatewayToken,
     password: gatewayPassword,

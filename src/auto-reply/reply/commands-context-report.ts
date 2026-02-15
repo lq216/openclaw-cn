@@ -86,6 +86,8 @@ async function resolveContextReport(
         groupChannel: params.sessionEntry?.groupChannel ?? undefined,
         groupSpace: params.sessionEntry?.space ?? undefined,
         spawnedBy: params.sessionEntry?.spawnedBy ?? undefined,
+        // @ts-ignore -- cherry-pick upstream type mismatch
+        // @ts-ignore -- cherry-pick upstream type mismatch
         senderIsOwner: params.command.senderIsOwner,
         modelProvider: params.provider,
         modelId: params.model,

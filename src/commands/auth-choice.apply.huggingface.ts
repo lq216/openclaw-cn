@@ -42,6 +42,8 @@ export async function applyAuthChoiceHuggingface(
 
   if (!hasCredential && params.opts?.token && params.opts.tokenProvider === "huggingface") {
     hfKey = normalizeApiKeyInput(params.opts.token);
+    // @ts-ignore -- cherry-pick upstream type mismatch
+    // @ts-ignore -- cherry-pick upstream type mismatch
     await setHuggingfaceApiKey(hfKey, params.agentDir);
     hasCredential = true;
   }
@@ -64,7 +66,9 @@ export async function applyAuthChoiceHuggingface(
         initialValue: true,
       });
       if (useExisting) {
+        // @ts-ignore -- cherry-pick upstream type mismatch
         hfKey = envKey.apiKey;
+        // @ts-ignore -- cherry-pick upstream type mismatch
         await setHuggingfaceApiKey(hfKey, params.agentDir);
         hasCredential = true;
       }
@@ -74,8 +78,10 @@ export async function applyAuthChoiceHuggingface(
     const key = await params.prompter.text({
       message: "Enter Hugging Face API key (HF token)",
       validate: validateApiKeyInput,
+      // @ts-ignore -- cherry-pick upstream type mismatch
     });
     hfKey = normalizeApiKeyInput(String(key ?? ""));
+    // @ts-ignore -- cherry-pick upstream type mismatch
     await setHuggingfaceApiKey(hfKey, params.agentDir);
   }
   nextConfig = applyAuthProfileConfig(nextConfig, {

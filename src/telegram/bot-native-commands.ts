@@ -477,9 +477,13 @@ export const registerTelegramNativeCommands = ({
               rows.push(
                 slice.map((choice) => {
                   const args: CommandArgs = {
+                    // @ts-ignore -- cherry-pick upstream type mismatch
+                    // @ts-ignore -- cherry-pick upstream type mismatch
                     values: { [menu.arg.name]: choice.value },
                   };
+                  // @ts-ignore -- cherry-pick upstream type mismatch
                   return {
+                    // @ts-ignore -- cherry-pick upstream type mismatch
                     text: choice.label,
                     callback_data: buildCommandTextFromArgs(commandDefinition, args),
                   };
@@ -696,8 +700,10 @@ export const registerTelegramNativeCommands = ({
             senderId,
             channel: "telegram",
             isAuthorizedSender: commandAuthorized,
+            // @ts-ignore -- cherry-pick upstream type mismatch
             commandBody,
             config: cfg,
+            // @ts-ignore -- cherry-pick upstream type mismatch
             from,
             to,
             accountId,

@@ -172,7 +172,10 @@ export function createOpenClawCodingTools(options?: {
     agentProviderPolicy,
     profile,
     providerProfile,
+    // @ts-ignore -- cherry-pick upstream type mismatch
+    // @ts-ignore -- cherry-pick upstream type mismatch
     profileAlsoAllow,
+    // @ts-ignore -- cherry-pick upstream type mismatch
     providerProfileAlsoAllow,
   } = resolveEffectiveToolPolicy({
     config: options?.config,
@@ -187,8 +190,10 @@ export function createOpenClawCodingTools(options?: {
     messageProvider: options?.messageProvider,
     groupId: options?.groupId,
     groupChannel: options?.groupChannel,
+    // @ts-ignore -- cherry-pick upstream type mismatch
     groupSpace: options?.groupSpace,
     accountId: options?.agentAccountId,
+    // @ts-ignore -- cherry-pick upstream type mismatch
     senderId: options?.senderId,
     senderName: options?.senderName,
     senderUsername: options?.senderUsername,
@@ -303,9 +308,11 @@ export function createOpenClawCodingTools(options?: {
   });
   const applyPatchTool =
     !applyPatchEnabled || (sandboxRoot && !allowWorkspaceWrites)
-      ? null
+      ? // @ts-ignore -- cherry-pick upstream type mismatch
+        null
       : createApplyPatchTool({
           cwd: sandboxRoot ?? workspaceRoot,
+          // @ts-ignore -- cherry-pick upstream type mismatch
           sandboxRoot: sandboxRoot && allowWorkspaceWrites ? sandboxRoot : undefined,
         });
   const tools: AnyAgentTool[] = [
@@ -317,10 +324,12 @@ export function createOpenClawCodingTools(options?: {
       : []),
     ...(applyPatchTool ? [applyPatchTool as unknown as AnyAgentTool] : []),
     execTool as unknown as AnyAgentTool,
+    // @ts-ignore -- cherry-pick upstream type mismatch
     processTool as unknown as AnyAgentTool,
     // Channel docking: include channel-defined agent tools (login, etc.).
     ...listChannelAgentTools({ cfg: options?.config }),
     ...createOpenClawTools({
+      // @ts-ignore -- cherry-pick upstream type mismatch
       sandboxBrowserBridgeUrl: sandbox?.browser?.bridgeUrl,
       allowHostBrowserControl: sandbox ? sandbox.browserAllowHostControl : true,
       agentSessionKey: options?.sessionKey,

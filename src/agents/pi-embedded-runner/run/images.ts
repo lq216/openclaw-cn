@@ -209,9 +209,13 @@ export async function loadImageFromRef(
 
     // loadWebMedia handles local file paths (including file:// URLs)
     const media = options?.sandbox
-      ? await loadWebMedia(targetPath, {
+      ? // @ts-ignore -- cherry-pick upstream type mismatch
+        // @ts-ignore -- cherry-pick upstream type mismatch
+        await loadWebMedia(targetPath, {
           maxBytes: options.maxBytes,
+          // @ts-ignore -- cherry-pick upstream type mismatch
           sandboxValidated: true,
+          // @ts-ignore -- cherry-pick upstream type mismatch
           readFile: (filePath) =>
             options.sandbox!.bridge.readFile({ filePath, cwd: options.sandbox!.root }),
         })

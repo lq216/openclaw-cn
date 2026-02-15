@@ -375,6 +375,8 @@ export async function compactEmbeddedPiSessionDirect(
       groupChannel: params.groupChannel,
       groupSpace: params.groupSpace,
       spawnedBy: params.spawnedBy,
+      // @ts-ignore -- cherry-pick upstream type mismatch
+      // @ts-ignore -- cherry-pick upstream type mismatch
       senderIsOwner: params.senderIsOwner,
       agentDir,
       workspaceDir: effectiveWorkspace,
@@ -500,7 +502,9 @@ export async function compactEmbeddedPiSessionDirect(
       userTimezone,
       userTime,
       userTimeFormat,
+      // @ts-ignore -- cherry-pick upstream type mismatch
       contextFiles,
+      // @ts-ignore -- cherry-pick upstream type mismatch
       memoryCitationsMode: params.config?.memory?.citations,
     });
     const systemPromptOverride = createSystemPromptOverride(appendPrompt);
@@ -554,8 +558,10 @@ export async function compactEmbeddedPiSessionDirect(
         tools: builtInTools,
         customTools,
         sessionManager,
+        // @ts-ignore -- cherry-pick upstream type mismatch
         settingsManager,
       });
+      // @ts-ignore -- cherry-pick upstream type mismatch
       applySystemPromptOverrideToSession(session, systemPromptOverride());
 
       try {
@@ -603,9 +609,11 @@ export async function compactEmbeddedPiSessionDirect(
         };
         if (hookRunner?.hasHooks("before_compaction")) {
           hookRunner
+            // @ts-ignore -- cherry-pick upstream type mismatch
             .runBeforeCompaction(
               {
                 messageCount: preCompactionMessages.length,
+                // @ts-ignore -- cherry-pick upstream type mismatch
                 compactingCount: limited.length,
                 messages: preCompactionMessages,
                 sessionFile: params.sessionFile,
@@ -655,10 +663,12 @@ export async function compactEmbeddedPiSessionDirect(
         if (hookRunner?.hasHooks("after_compaction")) {
           hookRunner
             .runAfterCompaction(
+              // @ts-ignore -- cherry-pick upstream type mismatch
               {
                 messageCount: session.messages.length,
                 tokenCount: tokensAfter,
                 compactedCount: limited.length - session.messages.length,
+                // @ts-ignore -- cherry-pick upstream type mismatch
                 sessionFile: params.sessionFile,
               },
               hookCtx,

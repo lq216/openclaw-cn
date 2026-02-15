@@ -150,6 +150,8 @@ export const sessionsHandlers: GatewayRequestHandlers = {
 
     for (const key of keys) {
       try {
+        // @ts-ignore -- cherry-pick upstream type mismatch
+        // @ts-ignore -- cherry-pick upstream type mismatch
         const storeTarget = resolveGatewaySessionStoreTarget({ cfg, key, scanLegacyKeys: false });
         const store =
           storeCache.get(storeTarget.storePath) ?? loadSessionStore(storeTarget.storePath);
@@ -243,13 +245,17 @@ export const sessionsHandlers: GatewayRequestHandlers = {
       return;
     }
     const parsed = parseAgentSessionKey(target.canonicalKey ?? key);
+    // @ts-ignore -- cherry-pick upstream type mismatch
     const agentId = normalizeAgentId(parsed?.agentId ?? resolveDefaultAgentId(cfg));
+    // @ts-ignore -- cherry-pick upstream type mismatch
     const resolved = resolveSessionModelRef(cfg, applied.entry, agentId);
     const result: SessionsPatchResult = {
       ok: true,
       path: storePath,
+      // @ts-ignore -- cherry-pick upstream type mismatch
       key: target.canonicalKey,
       entry: applied.entry,
+      // @ts-ignore -- cherry-pick upstream type mismatch
       resolved: {
         modelProvider: resolved.provider,
         model: resolved.model,

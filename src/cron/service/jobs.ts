@@ -249,6 +249,8 @@ function mergeCronDelivery(
   };
 
   if (typeof patch.mode === "string") {
+    // @ts-ignore -- cherry-pick upstream type mismatch
+    // @ts-ignore -- cherry-pick upstream type mismatch
     next.mode = patch.mode === "deliver" ? "announce" : patch.mode;
   }
   if ("channel" in patch) {

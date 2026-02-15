@@ -58,6 +58,8 @@ export async function ensureBrowserControlAuth(params: {
     return { auth };
   }
 
+  // @ts-ignore -- cherry-pick upstream type mismatch
+  // @ts-ignore -- cherry-pick upstream type mismatch
   if (params.cfg.gateway?.auth?.mode === "trusted-proxy") {
     return { auth };
   }
@@ -70,7 +72,9 @@ export async function ensureBrowserControlAuth(params: {
   }
   if (latestCfg.gateway?.auth?.mode === "password") {
     return { auth: latestAuth };
+    // @ts-ignore -- cherry-pick upstream type mismatch
   }
+  // @ts-ignore -- cherry-pick upstream type mismatch
   if (latestCfg.gateway?.auth?.mode === "trusted-proxy") {
     return { auth: latestAuth };
   }

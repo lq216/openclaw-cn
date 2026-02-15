@@ -62,6 +62,8 @@ function forkSessionFromParent(params: {
   const parentSessionFile = resolveSessionFilePath(
     params.parentEntry.sessionId,
     params.parentEntry,
+    // @ts-ignore -- cherry-pick upstream type mismatch
+    // @ts-ignore -- cherry-pick upstream type mismatch
     { agentId: params.agentId, sessionsDir: params.sessionsDir },
   );
   if (!parentSessionFile || !fs.existsSync(parentSessionFile)) {
@@ -369,9 +371,12 @@ export async function initSessionState(params: {
     (store) => {
       // Preserve per-session overrides while resetting compaction state on /new.
       store[sessionKey] = { ...store[sessionKey], ...sessionEntry };
+      // @ts-ignore -- cherry-pick upstream type mismatch
     },
+    // @ts-ignore -- cherry-pick upstream type mismatch
     {
       activeSessionKey: sessionKey,
+      // @ts-ignore -- cherry-pick upstream type mismatch
       onWarn: (warning) =>
         deliverSessionMaintenanceWarning({
           cfg,

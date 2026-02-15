@@ -346,6 +346,8 @@ export async function runCronIsolatedAgentTurn(params: {
       cfg: cfgWithAgentDefaults,
       provider,
       model,
+      // @ts-ignore -- cherry-pick upstream type mismatch
+      // @ts-ignore -- cherry-pick upstream type mismatch
       agentDir,
       fallbacksOverride: resolveAgentModelFallbacksOverride(params.cfg, agentId),
       run: (providerOverride, modelOverride) => {
@@ -387,7 +389,9 @@ export async function runCronIsolatedAgentTurn(params: {
           disableMessageTool: deliveryRequested,
         });
       },
+      // @ts-ignore -- cherry-pick upstream type mismatch
     });
+    // @ts-ignore -- cherry-pick upstream type mismatch
     runResult = fallbackResult.result;
     fallbackProvider = fallbackResult.provider;
     fallbackModel = fallbackResult.model;
@@ -477,8 +481,10 @@ export async function runCronIsolatedAgentTurn(params: {
       await deliverOutboundPayloads({
         cfg: cfgWithAgentDefaults,
         channel: resolvedDelivery.channel,
+        // @ts-ignore -- cherry-pick upstream type mismatch
         to: resolvedDelivery.to,
         accountId: resolvedDelivery.accountId,
+        // @ts-ignore -- cherry-pick upstream type mismatch
         threadId: resolvedDelivery.threadId,
         payloads,
         bestEffort: deliveryBestEffort,

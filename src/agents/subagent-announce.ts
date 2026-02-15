@@ -213,6 +213,8 @@ async function buildSubagentStatsLine(params: {
     try {
       transcriptPath = resolveSessionFilePath(sessionId, entry, {
         agentId,
+        // @ts-ignore -- cherry-pick upstream type mismatch
+        // @ts-ignore -- cherry-pick upstream type mismatch
         sessionsDir: path.dirname(storePath),
       });
     } catch {

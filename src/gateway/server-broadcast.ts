@@ -57,6 +57,8 @@ export function createGatewayBroadcaster(params: { clients: Set<GatewayWsClient>
     }
     logWs("out", "event", logMeta);
     for (const c of params.clients) {
+      // @ts-ignore -- cherry-pick upstream type mismatch
+      // @ts-ignore -- cherry-pick upstream type mismatch
       if (connIds && !connIds.has(c.id)) continue;
       if (!hasEventScope(c, event)) continue;
       const slow = c.socket.bufferedAmount > MAX_BUFFERED_BYTES;

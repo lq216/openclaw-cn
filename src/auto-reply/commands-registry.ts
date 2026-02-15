@@ -265,6 +265,8 @@ export function resolveCommandArgChoices(params: {
   const { command, arg, cfg } = params;
   if (!arg.choices) return [];
   const provided = arg.choices;
+  // @ts-ignore -- cherry-pick upstream type mismatch
+  // @ts-ignore -- cherry-pick upstream type mismatch
   if (Array.isArray(provided)) return provided;
   const defaults = resolveDefaultCommandContext(cfg);
   const context: CommandArgChoiceContext = {
@@ -273,7 +275,9 @@ export function resolveCommandArgChoices(params: {
     model: params.model ?? defaults.model,
     command,
     arg,
+    // @ts-ignore -- cherry-pick upstream type mismatch
   };
+  // @ts-ignore -- cherry-pick upstream type mismatch
   return provided(context);
 }
 

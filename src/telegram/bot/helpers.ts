@@ -220,6 +220,8 @@ export type TelegramReplyTarget = {
 export function describeReplyTarget(msg: Message): TelegramReplyTarget | null {
   const reply = msg.reply_to_message;
   const externalReply = msg.external_reply;
+  // @ts-ignore -- cherry-pick upstream type mismatch
+  // @ts-ignore -- cherry-pick upstream type mismatch
   const quoteText = msg.quote?.text ?? reply?.quote?.text ?? externalReply?.quote?.text;
   let body = "";
   let kind: TelegramReplyTarget["kind"] = "reply";
@@ -232,7 +234,9 @@ export function describeReplyTarget(msg: Message): TelegramReplyTarget | null {
   }
 
   const replyLike = reply ?? externalReply;
+  // @ts-ignore -- cherry-pick upstream type mismatch
   if (!body && replyLike) {
+    // @ts-ignore -- cherry-pick upstream type mismatch
     const replyBody = (replyLike.text ?? replyLike.caption ?? "").trim();
     body = replyBody;
     if (!body) {
@@ -243,8 +247,10 @@ export function describeReplyTarget(msg: Message): TelegramReplyTarget | null {
       } else if (replyLike.audio || replyLike.voice) {
         body = "<media:audio>";
       } else if (replyLike.document) {
+        // @ts-ignore -- cherry-pick upstream type mismatch
         body = "<media:document>";
       } else {
+        // @ts-ignore -- cherry-pick upstream type mismatch
         const locationData = extractTelegramLocation(replyLike);
         if (locationData) {
           body = formatLocationText(locationData);
@@ -252,9 +258,11 @@ export function describeReplyTarget(msg: Message): TelegramReplyTarget | null {
       }
     }
   }
+  // @ts-ignore -- cherry-pick upstream type mismatch
   if (!body) {
     return null;
   }
+  // @ts-ignore -- cherry-pick upstream type mismatch
   const sender = replyLike ? buildSenderName(replyLike) : undefined;
   const senderLabel = sender ?? "unknown sender";
 

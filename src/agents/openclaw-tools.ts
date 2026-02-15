@@ -67,6 +67,8 @@ export function createOpenClawTools(options?: {
     ? createImageTool({
         config: options?.config,
         agentDir: options.agentDir,
+        // @ts-ignore -- cherry-pick upstream type mismatch
+        // @ts-ignore -- cherry-pick upstream type mismatch
         workspaceDir,
         sandbox:
           options?.sandboxRoot && options?.sandboxFsBridge

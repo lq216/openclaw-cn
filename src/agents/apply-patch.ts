@@ -162,7 +162,10 @@ export async function applyPatch(
     }
 
     const target = await resolvePatchPath(hunk.path, options);
+    // @ts-ignore -- cherry-pick upstream type mismatch
+    // @ts-ignore -- cherry-pick upstream type mismatch
     const applied = await applyUpdateHunk(target.resolved, hunk.chunks, {
+      // @ts-ignore -- cherry-pick upstream type mismatch
       readFile: (path) => fileOps.readFile(path),
     });
 

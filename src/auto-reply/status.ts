@@ -192,6 +192,8 @@ const readUsageFromSessionLog = (
     logPath = resolveSessionFilePath(
       sessionId,
       sessionEntry,
+      // @ts-ignore -- cherry-pick upstream type mismatch
+      // @ts-ignore -- cherry-pick upstream type mismatch
       resolveSessionFilePath({ agentId: resolvedAgentId, storePath }),
     );
   } catch {

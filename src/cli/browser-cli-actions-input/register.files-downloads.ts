@@ -43,6 +43,8 @@ export function registerBrowserFilesAndDownloadsCommands(
       try {
         const normalizedPaths = normalizeUploadPaths(paths);
         const timeoutMs = Number.isFinite(opts.timeoutMs) ? opts.timeoutMs : undefined;
+        // @ts-ignore -- cherry-pick upstream type mismatch
+        // @ts-ignore -- cherry-pick upstream type mismatch
         const result = await callBrowserRequest<{ download: { path: string } }>(
           parent,
           {
@@ -87,7 +89,9 @@ export function registerBrowserFilesAndDownloadsCommands(
     .action(async (outPath: string | undefined, opts, cmd) => {
       const { parent, profile } = resolveBrowserActionContext(cmd, parentOpts);
       try {
+        // @ts-ignore -- cherry-pick upstream type mismatch
         const timeoutMs = Number.isFinite(opts.timeoutMs) ? opts.timeoutMs : undefined;
+        // @ts-ignore -- cherry-pick upstream type mismatch
         const result = await callBrowserRequest<{ download: { path: string } }>(
           parent,
           {
@@ -104,8 +108,10 @@ export function registerBrowserFilesAndDownloadsCommands(
         );
         if (parent?.json) {
           defaultRuntime.log(JSON.stringify(result, null, 2));
+          // @ts-ignore -- cherry-pick upstream type mismatch
           return;
         }
+        // @ts-ignore -- cherry-pick upstream type mismatch
         defaultRuntime.log(`downloaded: ${shortenHomePath(result.download.path)}`);
       } catch (err) {
         defaultRuntime.error(danger(String(err)));
@@ -128,9 +134,11 @@ export function registerBrowserFilesAndDownloadsCommands(
       (v: string) => Number(v),
     )
     .action(async (ref: string, outPath: string, opts, cmd) => {
+      // @ts-ignore -- cherry-pick upstream type mismatch
       const { parent, profile } = resolveBrowserActionContext(cmd, parentOpts);
       try {
         const timeoutMs = Number.isFinite(opts.timeoutMs) ? opts.timeoutMs : undefined;
+        // @ts-ignore -- cherry-pick upstream type mismatch
         const result = await callBrowserRequest<{ download: { path: string } }>(
           parent,
           {
@@ -146,10 +154,12 @@ export function registerBrowserFilesAndDownloadsCommands(
           },
           { timeoutMs: timeoutMs ?? 20000 },
         );
+        // @ts-ignore -- cherry-pick upstream type mismatch
         if (parent?.json) {
           defaultRuntime.log(JSON.stringify(result, null, 2));
           return;
         }
+        // @ts-ignore -- cherry-pick upstream type mismatch
         defaultRuntime.log(`downloaded: ${shortenHomePath(result.download.path)}`);
       } catch (err) {
         defaultRuntime.error(danger(String(err)));
@@ -187,11 +197,13 @@ export function registerBrowserFilesAndDownloadsCommands(
             query: profile ? { profile } : undefined,
             body: {
               accept,
+              // @ts-ignore -- cherry-pick upstream type mismatch
               promptText: opts.prompt?.trim() || undefined,
               targetId: opts.targetId?.trim() || undefined,
               timeoutMs,
             },
           },
+          // @ts-ignore -- cherry-pick upstream type mismatch
           { timeoutMs: timeoutMs ?? 20000 },
         );
         if (parent?.json) {

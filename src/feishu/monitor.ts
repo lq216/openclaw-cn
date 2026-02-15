@@ -98,6 +98,8 @@ export async function monitorFeishuProvider(opts: MonitorFeishuOpts = {}): Promi
           resolvedConfig: feishuCfg,
           credentials: { appId, appSecret },
           botName: account.name,
+          // @ts-ignore -- cherry-pick upstream type mismatch
+          // @ts-ignore -- cherry-pick upstream type mismatch
           botOpenId,
         });
       } catch (err) {

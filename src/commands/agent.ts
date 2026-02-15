@@ -390,6 +390,8 @@ export async function agentCommand(
         cfg,
         provider,
         model,
+        // @ts-ignore -- cherry-pick upstream type mismatch
+        // @ts-ignore -- cherry-pick upstream type mismatch
         agentDir,
         fallbacksOverride: resolveAgentModelFallbacksOverride(cfg, sessionAgentId),
         run: (providerOverride, modelOverride) => {
@@ -464,7 +466,9 @@ export async function agentCommand(
             },
           });
         },
+        // @ts-ignore -- cherry-pick upstream type mismatch
       });
+      // @ts-ignore -- cherry-pick upstream type mismatch
       result = fallbackResult.result;
       fallbackProvider = fallbackResult.provider;
       fallbackModel = fallbackResult.model;

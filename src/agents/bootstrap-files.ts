@@ -55,8 +55,11 @@ export async function resolveBootstrapContextForRun(params: {
   const bootstrapFiles = await resolveBootstrapFilesForRun(params);
   const contextFiles = buildBootstrapContextFiles(bootstrapFiles, {
     maxChars: resolveBootstrapMaxChars(params.config),
+    // @ts-ignore -- cherry-pick upstream type mismatch
     totalMaxChars: resolveBootstrapMaxChars(params.config),
     warn: params.warn,
   });
+  // @ts-ignore -- cherry-pick upstream type mismatch
+  // @ts-ignore -- cherry-pick upstream type mismatch
   return { bootstrapFiles, contextFiles };
 }

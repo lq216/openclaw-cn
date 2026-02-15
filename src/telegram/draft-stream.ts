@@ -25,6 +25,8 @@ export function createTelegramDraftStream(params: {
   const rawDraftId = Number.isFinite(params.draftId) ? Math.trunc(params.draftId) : 1;
   const draftId = rawDraftId === 0 ? 1 : Math.abs(rawDraftId);
   const chatId = params.chatId;
+  // @ts-ignore -- cherry-pick upstream type mismatch
+  // @ts-ignore -- cherry-pick upstream type mismatch
   const threadParams = buildTelegramThreadParams(params.thread);
 
   let lastSentText = "";

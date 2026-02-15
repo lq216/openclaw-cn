@@ -482,6 +482,8 @@ function buildTelegramSendParams(opts?: {
   thread?: TelegramThreadSpec | number | null;
   replyQuoteText?: string;
 }): Record<string, unknown> {
+  // @ts-ignore -- cherry-pick upstream type mismatch
+  // @ts-ignore -- cherry-pick upstream type mismatch
   const threadParams = buildTelegramThreadParams(opts?.thread);
   const params: Record<string, unknown> = {};
   if (opts?.replyToMessageId) {

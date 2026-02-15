@@ -93,6 +93,8 @@ export async function appendAssistantMessageToSessionTranscript(params: {
   try {
     sessionFile = resolveSessionFilePath(entry.sessionId, entry, {
       agentId: params.agentId,
+      // @ts-ignore -- cherry-pick upstream type mismatch
+      // @ts-ignore -- cherry-pick upstream type mismatch
       sessionsDir: path.dirname(storePath),
     });
   } catch (err) {

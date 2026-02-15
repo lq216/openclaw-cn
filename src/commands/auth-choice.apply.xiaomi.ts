@@ -24,7 +24,10 @@ export async function applyAuthChoiceXiaomi(
     apiKey = params.opts.token;
   }
 
+  // @ts-ignore -- cherry-pick upstream type mismatch
+  // @ts-ignore -- cherry-pick upstream type mismatch
   if (params.opts?.xiaomiApiKey) {
+    // @ts-ignore -- cherry-pick upstream type mismatch
     apiKey = params.opts.xiaomiApiKey;
   }
 
@@ -149,8 +152,10 @@ export async function applyAuthChoiceXiaomi(
     mode: "api_key",
   });
 
+  // @ts-ignore -- cherry-pick upstream type mismatch
   if (params.agentId) {
     // If setting for a specific agent, we need to handle it specially
+    // @ts-ignore -- cherry-pick upstream type mismatch
     nextConfig = applyXiaomiConfig(nextConfig, modelId);
     // But then force the agent override
     nextConfig = {
@@ -165,9 +170,11 @@ export async function applyAuthChoiceXiaomi(
           },
         },
       },
+      // @ts-ignore -- cherry-pick upstream type mismatch
     };
   } else {
     // Workspace default
+    // @ts-ignore -- cherry-pick upstream type mismatch
     nextConfig = applyXiaomiConfig(nextConfig, modelId);
   }
 

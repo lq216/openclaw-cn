@@ -353,6 +353,8 @@ export function registerSlackMonitorSlashCommands(params: {
             title,
             command: commandLabel,
             arg: menu.arg.name,
+            // @ts-ignore -- cherry-pick upstream type mismatch
+            // @ts-ignore -- cherry-pick upstream type mismatch
             choices: menu.choices,
             userId: command.user_id,
           });

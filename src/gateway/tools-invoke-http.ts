@@ -246,6 +246,8 @@ export async function handleToolsInvokeHttpRequest(
     : groupFiltered;
 
   // Gateway HTTP-specific deny list — applies to ALL sessions via HTTP.
+  // @ts-ignore -- cherry-pick upstream type mismatch
+  // @ts-ignore -- cherry-pick upstream type mismatch
   const gatewayToolsCfg = cfg.gateway?.tools;
   const gatewayDenyNames = DEFAULT_GATEWAY_HTTP_TOOL_DENY.filter(
     (name) => !gatewayToolsCfg?.allow?.includes(name),

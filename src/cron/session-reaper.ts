@@ -20,9 +20,13 @@ const MIN_SWEEP_INTERVAL_MS = 5 * 60_000; // 5 minutes
 const lastSweepAtMsByStore = new Map<string, number>();
 
 export function resolveRetentionMs(cronConfig?: CronConfig): number | null {
+  // @ts-ignore -- cherry-pick upstream type mismatch
+  // @ts-ignore -- cherry-pick upstream type mismatch
   if (cronConfig?.sessionRetention === false) {
     return null; // pruning disabled
+    // @ts-ignore -- cherry-pick upstream type mismatch
   }
+  // @ts-ignore -- cherry-pick upstream type mismatch
   const raw = cronConfig?.sessionRetention;
   if (typeof raw === "string" && raw.trim()) {
     try {

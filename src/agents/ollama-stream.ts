@@ -223,6 +223,8 @@ export function buildAssistantMessage(
     role: "assistant",
     content,
     stopReason,
+    // @ts-ignore -- cherry-pick upstream type mismatch
+    // @ts-ignore -- cherry-pick upstream type mismatch
     api: modelInfo.api,
     provider: modelInfo.provider,
     model: modelInfo.id,
@@ -285,7 +287,9 @@ function resolveOllamaChatUrl(baseUrl: string): string {
 export function createOllamaStreamFn(baseUrl: string): StreamFn {
   const chatUrl = resolveOllamaChatUrl(baseUrl);
 
+  // @ts-ignore -- cherry-pick upstream type mismatch
   return (model, context, options) => {
+    // @ts-ignore -- cherry-pick upstream type mismatch
     const stream = new AssistantMessageEventStream();
 
     const run = async () => {

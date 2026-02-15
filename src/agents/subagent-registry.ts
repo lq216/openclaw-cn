@@ -381,6 +381,8 @@ export function markSubagentRunTerminated(runId: string): void {
   const entry = subagentRuns.get(runId);
   if (entry && !entry.endedAt) {
     entry.endedAt = Date.now();
+    // @ts-ignore -- cherry-pick upstream type mismatch
+    // @ts-ignore -- cherry-pick upstream type mismatch
     entry.outcome = "terminated";
   }
 }

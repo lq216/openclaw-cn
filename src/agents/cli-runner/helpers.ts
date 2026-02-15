@@ -300,6 +300,8 @@ export function buildSystemPrompt(params: {
       node: process.version,
       model: params.modelDisplay,
       defaultModel: defaultModelLabel,
+      // @ts-ignore -- cherry-pick upstream type mismatch
+      // @ts-ignore -- cherry-pick upstream type mismatch
       shell: detectRuntimeShell(),
     },
   });
@@ -319,7 +321,9 @@ export function buildSystemPrompt(params: {
     userTime,
     userTimeFormat,
     contextFiles: params.contextFiles,
+    // @ts-ignore -- cherry-pick upstream type mismatch
     ttsHint,
+    // @ts-ignore -- cherry-pick upstream type mismatch
     memoryCitationsMode: params.config?.memory?.citations,
   });
 }

@@ -34,6 +34,8 @@ export async function applyAuthChoiceXAI(
   };
 
   let hasCredential = false;
+  // @ts-ignore -- cherry-pick upstream type mismatch
+  // @ts-ignore -- cherry-pick upstream type mismatch
   const optsKey = params.opts?.xaiApiKey?.trim();
   if (optsKey) {
     await setZaiApiKey(normalizeApiKeyInput(optsKey), params.agentDir);

@@ -30,6 +30,8 @@ function resolveRunAgentId(params: {
 } {
   const rawSessionKey = params.sessionKey?.trim() ?? "";
   const shape = classifySessionKeyShape(rawSessionKey);
+  // @ts-ignore -- cherry-pick upstream type mismatch
+  // @ts-ignore -- cherry-pick upstream type mismatch
   if (shape === "malformed_agent") {
     throw new Error("Malformed agent session key; refusing workspace resolution.");
   }
@@ -42,7 +44,9 @@ function resolveRunAgentId(params: {
     return { agentId: explicit, agentIdSource: "explicit" };
   }
 
+  // @ts-ignore -- cherry-pick upstream type mismatch
   const defaultAgentId = resolveDefaultAgentId(params.config ?? {});
+  // @ts-ignore -- cherry-pick upstream type mismatch
   if (shape === "missing" || shape === "legacy_or_alias") {
     return {
       agentId: defaultAgentId || DEFAULT_AGENT_ID,

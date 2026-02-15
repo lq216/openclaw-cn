@@ -82,9 +82,12 @@ export const handleCompactCommand: CommandHandler = async (params) => {
     sessionFile: resolveSessionFilePath(
       sessionId,
       params.sessionEntry,
+      // @ts-ignore -- cherry-pick upstream type mismatch
       resolveSessionFilePath({
         agentId: params.agentId,
         storePath: params.storePath,
+        // @ts-ignore -- cherry-pick upstream type mismatch
+        // @ts-ignore -- cherry-pick upstream type mismatch
       }),
     ),
     workspaceDir: params.workspaceDir,

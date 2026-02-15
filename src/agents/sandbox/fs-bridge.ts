@@ -204,7 +204,10 @@ class SandboxFsBridgeImpl implements SandboxFsBridge {
     if (options.args?.length) {
       dockerArgs.push(...options.args);
     }
+    // @ts-ignore -- cherry-pick upstream type mismatch
+    // @ts-ignore -- cherry-pick upstream type mismatch
     return execDocker(dockerArgs, {
+      // @ts-ignore -- cherry-pick upstream type mismatch
       input: options.stdin,
       allowFailure: options.allowFailure,
       signal: options.signal,

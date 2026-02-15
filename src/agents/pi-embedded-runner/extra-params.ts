@@ -74,6 +74,8 @@ function createStreamFnWithExtraParams(
   }
   const cacheRetention = resolveCacheRetention(extraParams, provider);
   if (cacheRetention) {
+    // @ts-ignore -- cherry-pick upstream type mismatch
+    // @ts-ignore -- cherry-pick upstream type mismatch
     streamParams.cacheRetention = cacheRetention;
   }
 

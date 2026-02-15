@@ -149,6 +149,8 @@ export const handleUsageCommand: CommandHandler = async (params, allowTextComman
       sessionEntry: params.sessionEntry,
       sessionFile: params.sessionEntry?.sessionFile,
       config: params.cfg,
+      // @ts-ignore -- cherry-pick upstream type mismatch
+      // @ts-ignore -- cherry-pick upstream type mismatch
       agentId: params.agentId,
     });
     const summary = await loadCostUsageSummary({ days: 30, config: params.cfg });

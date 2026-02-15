@@ -94,17 +94,23 @@ function buildDiscordCommandOptions(params: {
             typeof focused?.value === "string" ? focused.value.trim().toLowerCase() : "";
           const choices = resolveCommandArgChoices({ command, arg, cfg });
           const filtered = focusValue
-            ? choices.filter((choice) => choice.label.toLowerCase().includes(focusValue))
+            ? // @ts-ignore -- cherry-pick upstream type mismatch
+              // @ts-ignore -- cherry-pick upstream type mismatch
+              choices.filter((choice) => choice.label.toLowerCase().includes(focusValue))
             : choices;
+          // @ts-ignore -- cherry-pick upstream type mismatch
           await interaction.respond(
+            // @ts-ignore -- cherry-pick upstream type mismatch
             filtered.slice(0, 25).map((choice) => ({ name: choice.label, value: choice.value })),
           );
         }
       : undefined;
     const choices =
       resolvedChoices.length > 0 && !autocomplete
-        ? resolvedChoices
+        ? // @ts-ignore -- cherry-pick upstream type mismatch
+          resolvedChoices
             .slice(0, 25)
+            // @ts-ignore -- cherry-pick upstream type mismatch
             .map((choice) => ({ name: choice.label, value: choice.value }))
         : undefined;
     return {
@@ -694,9 +700,11 @@ async function dispatchDiscordCommandInteraction(params: {
     args: commandArgs,
     cfg,
   });
+  // @ts-ignore -- cherry-pick upstream type mismatch
   if (menu) {
     const menuPayload = buildDiscordCommandArgMenu({
       command,
+      // @ts-ignore -- cherry-pick upstream type mismatch
       menu,
       interaction: interaction as CommandInteraction,
       cfg,

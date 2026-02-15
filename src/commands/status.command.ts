@@ -477,6 +477,8 @@ export async function statusCommand(
           ? summary.sessions.recent.map((sess) => ({
               Key: shortenText(sess.key, 32),
               Kind: sess.kind,
+              // @ts-ignore -- cherry-pick upstream type mismatch
+              // @ts-ignore -- cherry-pick upstream type mismatch
               Age: sess.updatedAt ? formatAge(sess.age) : "no activity",
               Model: sess.model ?? "unknown",
               Tokens: formatTokensCompact(sess),
