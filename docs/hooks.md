@@ -6,14 +6,14 @@ read_when:
 ---
 # Hooks
 
-Hooks 提供了一个可扩展的事件驱动系统，用于响应 Agent 命令和事件并自动化执行操作。Hooks 会从目录中自动发现，并可以通过 CLI 命令进行管理，这与 Clawdbot 中技能（Skills）的工作方式类似。
+Hooks 提供了一个可扩展的事件驱动系统，用于响应 Agent 命令和事件并自动化执行操作。Hooks 会从目录中自动发现，并可以通过 CLI 命令进行管理，这与 openclaw-cn 中技能（Skills）的工作方式类似。
 
 ## 快速了解
 
 Hooks 是当某些事情发生时运行的小型脚本。主要有两种类型：
 
 - **Hooks**（本页）：在网关（Gateway）内部运行，当 Agent 事件触发时执行，例如 `/new`、`/reset`、`/stop` 或生命周期事件。
-- **Webhooks**：外部 HTTP Webhooks，允许其他系统在 Clawdbot 中触发工作。请参阅 [Webhook Hooks](/automation/webhook) 或使用 `clawdbot webhooks` 查看 Gmail 助手命令。
+- **Webhooks**：外部 HTTP Webhooks，允许其他系统在 openclaw-cn 中触发工作。请参阅 [Webhook Hooks](/automation/webhook) 或使用 `openclaw-cn webhooks` 查看 Gmail 助手命令。
 
 Hooks 也可以打包在插件中；请参阅 [插件](/plugin#plugin-hooks)。
 
@@ -31,13 +31,13 @@ Hooks 系统允许你：
 - 当发出 `/new` 命令时，将会话上下文保存到记忆中
 - 记录所有命令以进行审计
 - 在 Agent 生命周期事件上触发自定义自动化
-- 在不修改核心代码的情况下扩展 Clawdbot 的行为
+- 在不修改核心代码的情况下扩展 openclaw-cn 的行为
 
 ## 入门指南
 
 ### 内置 Hooks (Bundled Hooks)
 
-Clawdbot 附带了四个自动发现的内置 Hooks：
+openclaw-cn 附带了四个自动发现的内置 Hooks：
 
 - **💾 session-memory**：当你发出 `/new` 时，将会话上下文保存到你的 Agent 工作区（默认为 `~/clawwork/memory/`）
 - **📝 command-logger**：将所有命令事件记录到 `~/.openclaw/logs/commands.log`
@@ -47,25 +47,25 @@ Clawdbot 附带了四个自动发现的内置 Hooks：
 列出可用的 Hooks：
 
 ```bash
-clawdbot hooks list
+openclaw-cn hooks list
 ```
 
 启用一个 Hook：
 
 ```bash
-clawdbot hooks enable session-memory
+openclaw-cn hooks enable session-memory
 ```
 
 检查 Hook 状态：
 
 ```bash
-clawdbot hooks check
+openclaw-cn hooks check
 ```
 
 获取详细信息：
 
 ```bash
-clawdbot hooks info session-memory
+openclaw-cn hooks info session-memory
 ```
 
 ### 入门引导
@@ -78,7 +78,7 @@ Hooks 会从三个目录（按优先级顺序）自动发现：
 
 1. **工作区 Hooks**：`<workspace>/hooks/`（每个 Agent 独立，优先级最高）
 2. **托管 Hooks**：`~/.openclaw/hooks/`（用户安装，跨工作区共享）
-3. **内置 Hooks**：`<clawdbot>/dist/hooks/bundled/`（随 Clawdbot 发布）
+3. **内置 Hooks**：`<clawdbot>/dist/hooks/bundled/`（随 openclaw-cn 发布）
 
 托管 Hook 目录可以是**单个 Hook**，也可以是**Hook 包**（包目录）。
 
@@ -95,7 +95,7 @@ my-hook/
 Hook 包是标准的 npm 包，通过 `package.json` 中的 `openclaw.hooks` 导出一个或多个 Hooks。安装方式如下：
 
 ```bash
-clawdbot hooks install <path-or-spec>
+openclaw-cn hooks install <path-or-spec>
 ```
 
 `package.json` 示例：
@@ -240,7 +240,7 @@ export default myHandler;
 
 ### 工具结果 Hooks（插件 API）
 
-这些 Hooks 不是事件流监听器；它们允许插件在 Clawdbot 持久化工具结果之前同步调整结果。
+这些 Hooks 不是事件流监听器；它们允许插件在 openclaw-cn 持久化工具结果之前同步调整结果。
 
 - **`tool_result_persist`**：在工具结果写入会话记录之前对其进行转换。必须是同步的；返回更新后的工具结果负载，或返回 `undefined` 以保持原样。请参阅 [Agent 循环](/concepts/agent-loop)。
 
@@ -303,10 +303,10 @@ export default handler;
 
 ```bash
 # 验证 Hook 是否被发现
-clawdbot hooks list
+openclaw-cn hooks list
 
 # 启用它
-clawdbot hooks enable my-hook
+openclaw-cn hooks enable my-hook
 
 # 重启你的网关进程（macOS 上重启菜单栏应用，或者重启你的开发进程）
 
@@ -400,46 +400,46 @@ Hooks 可以有自定义配置：
 
 ```bash
 # 列出所有 Hooks
-clawdbot hooks list
+openclaw-cn hooks list
 
 # 仅显示符合条件的 Hooks
-clawdbot hooks list --eligible
+openclaw-cn hooks list --eligible
 
 # 详细输出（显示缺失的要求）
-clawdbot hooks list --verbose
+openclaw-cn hooks list --verbose
 
 # JSON 输出
-clawdbot hooks list --json
+openclaw-cn hooks list --json
 ```
 
 ### Hook 信息
 
 ```bash
 # 显示关于某个 Hook 的详细信息
-clawdbot hooks info session-memory
+openclaw-cn hooks info session-memory
 
 # JSON 输出
-clawdbot hooks info session-memory --json
+openclaw-cn hooks info session-memory --json
 ```
 
 ### 检查资格 (Check Eligibility)
 
 ```bash
 # 显示资格摘要
-clawdbot hooks check
+openclaw-cn hooks check
 
 # JSON 输出
-clawdbot hooks check --json
+openclaw-cn hooks check --json
 ```
 
 ### 启用/禁用
 
 ```bash
 # 启用 Hook
-clawdbot hooks enable session-memory
+openclaw-cn hooks enable session-memory
 
 # 禁用 Hook
-clawdbot hooks disable command-logger
+openclaw-cn hooks disable command-logger
 ```
 
 ## 内置 Hooks
@@ -478,7 +478,7 @@ clawdbot hooks disable command-logger
 **启用**：
 
 ```bash
-clawdbot hooks enable session-memory
+openclaw-cn hooks enable session-memory
 ```
 
 ### command-logger
@@ -519,7 +519,7 @@ grep '"action":"new"' ~/.openclaw/logs/commands.log | jq .
 **启用**：
 
 ```bash
-clawdbot hooks enable command-logger
+openclaw-cn hooks enable command-logger
 ```
 
 ### soul-evil
@@ -535,7 +535,7 @@ clawdbot hooks enable command-logger
 **启用**：
 
 ```bash
-clawdbot hooks enable soul-evil
+openclaw-cn hooks enable soul-evil
 ```
 
 **配置**：
@@ -575,7 +575,7 @@ clawdbot hooks enable soul-evil
 **启用**：
 
 ```bash
-clawdbot hooks enable boot-md
+openclaw-cn hooks enable boot-md
 ```
 
 ## 最佳实践
@@ -658,7 +658,7 @@ Registered hook: boot-md -> gateway:startup
 列出所有已发现的 Hooks：
 
 ```bash
-clawdbot hooks list --verbose
+openclaw-cn hooks list --verbose
 ```
 
 ### 检查注册
@@ -677,7 +677,7 @@ const handler: HookHandler = async (event) => {
 检查为什么一个 Hook 不符合条件：
 
 ```bash
-clawdbot hooks info my-hook
+openclaw-cn hooks info my-hook
 ```
 
 在输出中查找缺失的要求。
@@ -780,7 +780,7 @@ test('my handler works', async () => {
 
 3. 列出所有发现的 Hooks：
    ```bash
-   clawdbot hooks list
+   openclaw-cn hooks list
    ```
 
 ### Hook 不符合条件 (Not Eligible)
@@ -788,7 +788,7 @@ test('my handler works', async () => {
 检查要求：
 
 ```bash
-clawdbot hooks info my-hook
+openclaw-cn hooks info my-hook
 ```
 
 查找缺失项：
@@ -801,7 +801,7 @@ clawdbot hooks info my-hook
 
 1. 验证 Hook 是否启用：
    ```bash
-   clawdbot hooks list
+   openclaw-cn hooks list
    # 应该在已启用的 Hooks 旁边显示 ✓
    ```
 
@@ -880,7 +880,7 @@ node -e "import('./path/to/handler.ts').then(console.log)"
 
 4. 验证并重启你的网关进程：
    ```bash
-   clawdbot hooks list
+   openclaw-cn hooks list
    # 应该显示： 🎯 my-hook ✓
    ```
 
