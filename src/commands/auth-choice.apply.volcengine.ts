@@ -6,7 +6,11 @@ import {
   normalizeApiKeyInput,
   validateApiKeyInput,
 } from "./auth-choice.api-key.js";
-import { applyAuthProfileConfig, applyVeniceConfig, setVeniceApiKey } from "./onboard-auth.js";
+import {
+  applyAuthProfileConfig,
+  applyVolcengineConfig,
+  setVolcengineApiKey,
+} from "./onboard-auth.js";
 
 export async function applyAuthChoiceVolcengine(
   params: ApplyAuthChoiceParams,
@@ -59,7 +63,7 @@ export async function applyAuthChoiceVolcengine(
   }
 
   // Save API Key
-  await setVeniceApiKey(apiKey, params.agentDir);
+  await setVolcengineApiKey(apiKey, params.agentDir);
 
   // 2. Models (Used for config generation later)
 
@@ -171,32 +175,8 @@ export async function applyAuthChoiceVolcengine(
     mode: "api_key",
   });
 
-  if (params.agentId) {
-    // If setting for a specific agent, we need to handle it specially
-    // @ts-ignore -- cherry-pick upstream type mismatch
-    nextConfig = applyVeniceConfig(nextConfig, modelId);
-    // @ts-ignore -- cherry-pick upstream type mismatch
-    // But then force the agent override
-    nextConfig = {
-      ...nextConfig,
-      // @ts-ignore -- cherry-pick upstream type mismatch
-      agents: {
-        ...nextConfig.agents,
-        defaults: {
-          ...nextConfig.agents?.defaults,
-          model: {
-            ...nextConfig.agents?.defaults?.model,
-            primary: `volcengine/${modelId}`,
-          },
-        },
-      },
-    };
-  } else {
-    // Workspace default
-    // @ts-ignore -- cherry-pick upstream type mismatch
-    nextConfig = applyVeniceConfig(nextConfig, modelId);
-  }
+  // Apply volcengine provider config and set model for both agent and workspace default
+  nextConfig = applyVolcengineConfig(nextConfig, modelId);
 
   return { config: nextConfig, agentModelOverride: modelId };
-  // @ts-ignore -- cherry-pick upstream type mismatch
 }
