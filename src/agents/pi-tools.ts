@@ -41,6 +41,7 @@ import { cleanToolSchemaForGemini, normalizeToolParameters } from "./pi-tools.sc
 import type { AnyAgentTool } from "./pi-tools.types.js";
 import type { SandboxContext } from "./sandbox.js";
 import {
+  applyOwnerOnlyToolPolicy,
   buildPluginToolGroups,
   collectExplicitAllowlist,
   expandPolicyWithPluginGroups,
@@ -146,6 +147,12 @@ export function createClawdbotCodingTools(options?: {
   hasRepliedRef?: { value: boolean };
   /** If true, the model has native vision capability */
   modelHasVision?: boolean;
+  /** Require explicit message targets (no implicit last-route sends). */
+  requireExplicitMessageTarget?: boolean;
+  /** If true, omit the message tool from the tool list. */
+  disableMessageTool?: boolean;
+  /** Whether the sender is an owner (required for owner-only tools). */
+  senderIsOwner?: boolean;
 }): AnyAgentTool[] {
   const execToolName = "exec";
   const sandbox = options?.sandbox?.enabled ? options.sandbox : undefined;
@@ -318,15 +325,18 @@ export function createClawdbotCodingTools(options?: {
       requesterAgentIdOverride: agentId,
     }),
   ];
+  // Security: treat unknown/undefined as unauthorized (opt-in, not opt-out)
+  const senderIsOwner = options?.senderIsOwner === true;
+  const toolsByAuthorization = applyOwnerOnlyToolPolicy(tools, senderIsOwner);
   const coreToolNames = new Set(
-    tools
-      .filter((tool) => !getPluginToolMeta(tool as AnyAgentTool))
+    toolsByAuthorization
+      .filter((tool) => !getPluginToolMeta(tool))
       .map((tool) => normalizeToolName(tool.name))
       .filter(Boolean),
   );
   const pluginGroups = buildPluginToolGroups({
-    tools,
-    toolMeta: (tool) => getPluginToolMeta(tool as AnyAgentTool),
+    tools: toolsByAuthorization,
+    toolMeta: (tool) => getPluginToolMeta(tool),
   });
   const resolvePolicy = (policy: typeof profilePolicy, label: string) => {
     const resolved = stripPluginOnlyAllowlist(policy, pluginGroups, coreToolNames);
@@ -362,8 +372,8 @@ export function createClawdbotCodingTools(options?: {
   const subagentPolicyExpanded = expandPolicyWithPluginGroups(subagentPolicy, pluginGroups);
 
   const toolsFiltered = profilePolicyExpanded
-    ? filterToolsByPolicy(tools, profilePolicyExpanded)
-    : tools;
+    ? filterToolsByPolicy(toolsByAuthorization, profilePolicyExpanded)
+    : toolsByAuthorization;
   const providerProfileFiltered = providerProfileExpanded
     ? filterToolsByPolicy(toolsFiltered, providerProfileExpanded)
     : toolsFiltered;

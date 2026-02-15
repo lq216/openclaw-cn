@@ -37,6 +37,12 @@ export type RunEmbeddedPiAgentParams = {
   groupSpace?: string | null;
   /** Parent session key for subagent policy inheritance. */
   spawnedBy?: string | null;
+  senderId?: string | null;
+  senderName?: string | null;
+  senderUsername?: string | null;
+  senderE164?: string | null;
+  /** Whether the sender is an owner (required for owner-only tools). */
+  senderIsOwner?: boolean;
   /** Current channel ID for auto-threading (Slack). */
   currentChannelId?: string;
   /** Current thread timestamp for auto-threading (Slack). */

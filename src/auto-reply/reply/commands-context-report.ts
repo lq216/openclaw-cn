@@ -86,6 +86,7 @@ async function resolveContextReport(
         groupChannel: params.sessionEntry?.groupChannel ?? undefined,
         groupSpace: params.sessionEntry?.space ?? undefined,
         spawnedBy: params.sessionEntry?.spawnedBy ?? undefined,
+        senderIsOwner: params.command.senderIsOwner,
         modelProvider: params.provider,
         modelId: params.model,
       });
