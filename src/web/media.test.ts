@@ -294,4 +294,31 @@ describe("web media loading", () => {
     expect(result.contentType).toBe("image/jpeg");
     expect(result.buffer.length).toBeLessThanOrEqual(cap);
   });
+
+  it("allows default OpenClaw state workspace and sandbox roots", async () => {
+    const { STATE_DIR } = await import("../config/paths.js");
+    const readFile = vi.fn(async () => Buffer.from("generated-media"));
+
+    await expect(
+      loadWebMedia(path.join(STATE_DIR, "workspace", "tmp", "render.bin"), {
+        maxBytes: 1024 * 1024,
+        readFile,
+      }),
+    ).resolves.toEqual(
+      expect.objectContaining({
+        kind: "unknown",
+      }),
+    );
+
+    await expect(
+      loadWebMedia(path.join(STATE_DIR, "sandboxes", "session-1", "frame.bin"), {
+        maxBytes: 1024 * 1024,
+        readFile,
+      }),
+    ).resolves.toEqual(
+      expect.objectContaining({
+        kind: "unknown",
+      }),
+    );
+  });
 });
