@@ -93,12 +93,7 @@ export class TuiStreamAssembler {
     return state;
   }
 
-  private updateRunState(
-    state: RunStreamState,
-    message: unknown,
-    showThinking: boolean,
-    opts?: { protectBoundaryDrops?: boolean },
-  ) {
+  private updateRunState(state: RunStreamState, message: unknown, showThinking: boolean) {
     const thinkingText = extractThinkingFromMessage(message);
     const contentText = extractContentFromMessage(message);
     const { textBlocks, sawNonTextContentBlocks } = extractTextBlocksAndSignals(message);
@@ -107,19 +102,8 @@ export class TuiStreamAssembler {
       state.thinkingText = thinkingText;
     }
     if (contentText) {
-      const nextContentBlocks = textBlocks.length > 0 ? textBlocks : [contentText];
-      const shouldPreserveBoundaryDroppedText =
-        opts?.protectBoundaryDrops === true &&
-        (state.sawNonTextContentBlocks || sawNonTextContentBlocks) &&
-        isDroppedBoundaryTextBlockSubset({
-          streamedTextBlocks: state.contentBlocks,
-          finalTextBlocks: nextContentBlocks,
-        });
-
-      if (!shouldPreserveBoundaryDroppedText) {
-        state.contentText = contentText;
-        state.contentBlocks = nextContentBlocks;
-      }
+      state.contentText = contentText;
+      state.contentBlocks = textBlocks.length > 0 ? textBlocks : [contentText];
     }
     if (sawNonTextContentBlocks) {
       state.sawNonTextContentBlocks = true;
@@ -137,7 +121,7 @@ export class TuiStreamAssembler {
   ingestDelta(runId: string, message: unknown, showThinking: boolean): string | null {
     const state = this.getOrCreateRun(runId);
     const previousDisplayText = state.displayText;
-    this.updateRunState(state, message, showThinking, { protectBoundaryDrops: true });
+    this.updateRunState(state, message, showThinking);
 
     if (!state.displayText || state.displayText === previousDisplayText) {
       return null;
