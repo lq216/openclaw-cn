@@ -1,14 +1,40 @@
-import { note as clackNote } from "@clack/prompts";
+import chalk from "chalk";
 import { visibleWidth } from "./ansi.js";
 import { stylePromptTitle } from "./prompt-style.js";
+
+const isUnicodeSupported = () =>
+  process.platform !== "win32" ||
+  Boolean(process.env.CI) ||
+  Boolean(process.env.WT_SESSION) ||
+  process.env.TERM_PROGRAM === "vscode" ||
+  process.env.TERM === "xterm-256color" ||
+  process.env.TERM === "alacritty";
+
+const rich = isUnicodeSupported();
+const BAR = rich ? "\u2502" : "|";
+const HBAR = rich ? "\u2500" : "-";
+const CORNER_TL = rich ? "\u25C7" : "o"; // ◇ (open diamond – matches @clack title marker)
+const CORNER_TR = rich ? "\u256E" : "+"; // ╮
+const CONNECTOR_L = rich ? "\u251C" : "+"; // ├
+const CORNER_BR = rich ? "\u256F" : "+"; // ╯
 
 function splitLongWord(word: string, maxLen: number): string[] {
   if (maxLen <= 0) return [word];
   const chars = Array.from(word);
   const parts: string[] = [];
-  for (let i = 0; i < chars.length; i += maxLen) {
-    parts.push(chars.slice(i, i + maxLen).join(""));
+  let current = "";
+  let currentW = 0;
+  for (const ch of chars) {
+    const cw = visibleWidth(ch);
+    if (currentW + cw > maxLen && current.length > 0) {
+      parts.push(current);
+      current = "";
+      currentW = 0;
+    }
+    current += ch;
+    currentW += cw;
   }
+  if (current) parts.push(current);
   return parts.length > 0 ? parts : [word];
 }
 
@@ -85,5 +111,36 @@ export function wrapNoteMessage(
 }
 
 export function note(message: string, title?: string) {
-  clackNote(wrapNoteMessage(message), stylePromptTitle(title));
+  const wrapped = wrapNoteMessage(message);
+  const lines = wrapped.split("\n");
+
+  // Compute the max visible width across all lines and the title
+  const styledTitle = (title ? stylePromptTitle(title) : "") ?? "";
+  const titleW = visibleWidth(styledTitle);
+  const maxContentW = lines.reduce((max, l) => Math.max(max, visibleWidth(l)), 0);
+  const boxInner = Math.max(maxContentW, titleW) + 2; // 2 = left/right padding inside the box
+
+  // Top: │ then ◇  title ────╮
+  const topLine =
+    chalk.gray(BAR) +
+    "\n" +
+    chalk.green(CORNER_TL) +
+    "  " +
+    chalk.reset(styledTitle) +
+    " " +
+    chalk.gray(HBAR.repeat(Math.max(boxInner - titleW - 1, 1)) + CORNER_TR);
+
+  // Body lines: │  content   padding│
+  const body = lines
+    .map((l) => {
+      const lw = visibleWidth(l);
+      const pad = Math.max(0, boxInner - lw);
+      return chalk.gray(BAR) + "  " + chalk.dim(l) + " ".repeat(pad) + chalk.gray(BAR);
+    })
+    .join("\n");
+
+  // Bottom: ├──────────────╯
+  const bottom = chalk.gray(CONNECTOR_L + HBAR.repeat(boxInner + 2) + CORNER_BR);
+
+  process.stdout.write(topLine + "\n" + body + "\n" + bottom + "\n");
 }
