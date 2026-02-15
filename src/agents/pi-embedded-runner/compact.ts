@@ -8,7 +8,7 @@ import {
 import fs from "node:fs/promises";
 import os from "node:os";
 import type { ReasoningLevel, ThinkLevel } from "../../auto-reply/thinking.js";
-import type { ClawdbotConfig } from "../../config/config.js";
+import type { OpenClawConfig } from "../../config/config.js";
 import type { ExecElevatedDefaults } from "../bash-tools.js";
 import type { EmbeddedPiCompactResult } from "./types.js";
 import { resolveHeartbeatPrompt } from "../../auto-reply/heartbeat.js";
@@ -57,7 +57,6 @@ import {
   type SkillSnapshot,
 } from "../skills.js";
 import { resolveTranscriptPolicy } from "../transcript-policy.js";
-import { compactWithSafetyTimeout } from "./compaction-safety-timeout.js";
 import { buildEmbeddedExtensionPaths } from "./extensions.js";
 import {
   logToolSchemasForGoogle,
@@ -76,7 +75,7 @@ import {
   createSystemPromptOverride,
 } from "./system-prompt.js";
 import { splitSdkTools } from "./tool-split.js";
-import { describeUnknownError, mapThinkingLevel } from "./utils.js";
+import { describeUnknownError, mapThinkingLevel, resolveExecToolDefaults } from "./utils.js";
 import { flushPendingToolResultsAfterIdle } from "./wait-for-idle-before-flush.js";
 
 export type CompactEmbeddedPiSessionParams = {
@@ -100,7 +99,7 @@ export type CompactEmbeddedPiSessionParams = {
   sessionFile: string;
   workspaceDir: string;
   agentDir?: string;
-  config?: ClawdbotConfig;
+  config?: OpenClawConfig;
   skillsSnapshot?: SkillSnapshot;
   provider?: string;
   model?: string;
@@ -108,7 +107,7 @@ export type CompactEmbeddedPiSessionParams = {
   reasoningLevel?: ReasoningLevel;
   bashElevated?: ExecElevatedDefaults;
   customInstructions?: string;
-  trigger?: "overflow" | "manual";
+  trigger?: "overflow" | "manual" | "cache_ttl" | "safeguard";
   diagId?: string;
   attempt?: number;
   maxAttempts?: number;
@@ -365,6 +364,7 @@ export async function compactEmbeddedPiSessionDirect(
     const runAbortController = new AbortController();
     const toolsRaw = createOpenClawCodingTools({
       exec: {
+        ...resolveExecToolDefaults(params.config),
         elevated: params.bashElevated,
       },
       sandbox,
@@ -633,9 +633,7 @@ export async function compactEmbeddedPiSessionDirect(
         }
 
         const compactStartedAt = Date.now();
-        const result = await compactWithSafetyTimeout(() =>
-          session.compact(params.customInstructions),
-        );
+        const result = await session.compact(params.customInstructions);
         // Estimate tokens after compaction by summing token estimates for remaining messages
         let tokensAfter: number | undefined;
         try {
