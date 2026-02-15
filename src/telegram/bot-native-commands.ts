@@ -50,6 +50,7 @@ import {
   buildSenderName,
   buildTelegramGroupFrom,
   buildTelegramGroupPeerId,
+  buildTelegramParentPeer,
   resolveTelegramForumThreadId,
   resolveTelegramThreadSpec,
 } from "./bot/helpers.js";
@@ -357,7 +358,7 @@ export const registerTelegramNativeCommands = ({
     existingCommands.add(normalized);
     pluginCommands.push({ command: normalized, description });
   }
-  const allCommands: Array<{ command: string; description: string }> = [
+  const allCommandsFull: Array<{ command: string; description: string }> = [
     ...nativeCommands.map((command) => ({
       command: command.name,
       description: command.description,
@@ -365,14 +366,43 @@ export const registerTelegramNativeCommands = ({
     ...pluginCommands,
     ...customCommands,
   ];
+  const TELEGRAM_MAX_COMMANDS = 100;
+  if (allCommandsFull.length > TELEGRAM_MAX_COMMANDS) {
+    runtime.log?.(
+      `Telegram limits bots to ${TELEGRAM_MAX_COMMANDS} commands. ` +
+        `${allCommandsFull.length} configured; registering first ${TELEGRAM_MAX_COMMANDS}. ` +
+        `Use channels.telegram.commands.native: false to disable, or reduce skill/custom commands.`,
+    );
+  }
+  // Telegram only limits the setMyCommands payload (menu entries).
+  const commandsToRegister = allCommandsFull.slice(0, TELEGRAM_MAX_COMMANDS);
 
-  if (allCommands.length > 0) {
+  // Clear stale commands before registering new ones to prevent
+  // leftover commands from deleted skills persisting across restarts (#5717).
+  // Chain delete → set so a late-resolving delete cannot wipe newly registered commands.
+  const registerCommands = () => {
+    if (commandsToRegister.length > 0) {
+      withTelegramApiErrorLogging({
+        operation: "setMyCommands",
+        runtime,
+        fn: () => bot.api.setMyCommands(commandsToRegister),
+      }).catch(() => {});
+    }
+  };
+  if (typeof bot.api.deleteMyCommands === "function") {
     withTelegramApiErrorLogging({
-      operation: "setMyCommands",
+      operation: "deleteMyCommands",
       runtime,
-      fn: () => bot.api.setMyCommands(allCommands),
-    }).catch(() => {});
+      fn: () => bot.api.deleteMyCommands(),
+    })
+      .catch(() => {})
+      .then(registerCommands)
+      .catch(() => {});
+  } else {
+    registerCommands();
+  }
 
+  if (commandsToRegister.length > 0) {
     if (typeof (bot as unknown as { command?: unknown }).command !== "function") {
       logVerbose("telegram: bot.command unavailable; skipping native handlers");
     } else {
@@ -469,14 +499,16 @@ export const registerTelegramNativeCommands = ({
             });
             return;
           }
+          const parentPeer = buildTelegramParentPeer({ isGroup, resolvedThreadId, chatId });
           const route = resolveAgentRoute({
             cfg,
             channel: "telegram",
             accountId,
             peer: {
-              kind: isGroup ? "group" : "dm",
+              kind: isGroup ? "group" : "direct",
               id: isGroup ? buildTelegramGroupPeerId(chatId, resolvedThreadId) : String(chatId),
             },
+            parentPeer,
           });
           const baseSessionKey = route.sessionKey;
           // DMs: use raw messageThreadId for thread sessions (not resolvedThreadId which is for forums)
@@ -508,6 +540,7 @@ export const registerTelegramNativeCommands = ({
             : (buildSenderName(msg) ?? String(senderId || chatId));
           const ctxPayload = finalizeInboundContext({
             Body: prompt,
+            BodyForAgent: prompt,
             RawBody: prompt,
             CommandBody: prompt,
             CommandArgs: commandArgs,
@@ -653,6 +686,10 @@ export const registerTelegramNativeCommands = ({
             isForum,
             messageThreadId,
           });
+          const from = isGroup
+            ? buildTelegramGroupFrom(chatId, threadSpec.id)
+            : `telegram:${chatId}`;
+          const to = `telegram:${chatId}`;
 
           const result = await executePluginCommand({
             command: match.command,
@@ -662,6 +699,10 @@ export const registerTelegramNativeCommands = ({
             isAuthorizedSender: commandAuthorized,
             commandBody,
             config: cfg,
+            from,
+            to,
+            accountId,
+            messageThreadId: threadSpec.id,
           });
           const tableMode = resolveMarkdownTableMode({
             cfg,
