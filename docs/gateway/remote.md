@@ -76,6 +76,9 @@ ssh -N -L 18789:127.0.0.1:18789 user@host
 
 注意：将 `18789` 替换为您配置的 `gateway.port`（或 `--port`/`OPENCLAW_GATEWAY_PORT`）。
 
+注意：当您使用 `--url` 时，CLI 不会回退到配置文件或环境变量中的凭据。
+请显式包含 `--token` 或 `--password`。缺少显式凭据将导致错误。
+
 ## CLI 远程默认值
 
 您可以持久化远程目标，以便 CLI 命令默认使用它：

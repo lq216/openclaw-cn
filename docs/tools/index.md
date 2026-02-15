@@ -408,6 +408,9 @@ OpenClaw 为浏览器、画布、节点和定时任务提供**一流代理工具
 - `gatewayToken`（如果启用了身份验证）
 - `timeoutMs`
 
+注意：当设置了 `gatewayUrl` 时，请显式包含 `gatewayToken`。工具不会继承配置文件
+或环境变量中的凭据用于覆盖，缺少显式凭据将导致错误。
+
 浏览器工具：
 - `controlUrl`（从配置中默认）
 

@@ -158,6 +158,8 @@ http://localhost:5173/?gatewayUrl=wss://<gateway-host>:18789&token=<gateway-toke
 Notes:
 - `gatewayUrl` is stored in localStorage after load and removed from the URL.
 - `token` is stored in localStorage; `password` is kept in memory only.
+- When `gatewayUrl` is set, the UI does not fall back to config or environment credentials.
+  Provide `token` (or `password`) explicitly. Missing explicit credentials is an error.
 - Use `wss://` when the Gateway is behind TLS (Tailscale Serve, HTTPS proxy, etc.).
 
 Remote access setup details: [Remote access](/gateway/remote).
