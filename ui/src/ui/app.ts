@@ -197,6 +197,22 @@ export class OpenClawApp extends LitElement {
   @state() agentsLoading = false;
   @state() agentsList: AgentsListResult | null = null;
   @state() agentsError: string | null = null;
+  @state() agentsSelectedId: string | null = null;
+  @state() agentsPanel: "overview" | "files" | "tools" | "skills" | "channels" | "cron" = "overview";
+  @state() agentFilesLoading = false;
+  @state() agentFilesError: string | null = null;
+  @state() agentFilesList: import("./types.js").AgentsFilesListResult | null = null;
+  @state() agentFileActive: string | null = null;
+  @state() agentFileContents: Record<string, string> = {};
+  @state() agentFileDrafts: Record<string, string> = {};
+  @state() agentFileSaving = false;
+  @state() agentIdentityLoading = false;
+  @state() agentIdentityError: string | null = null;
+  @state() agentIdentityById: Record<string, import("./types.js").AgentIdentityResult> = {};
+  @state() agentSkillsLoading = false;
+  @state() agentSkillsReport: SkillStatusReport | null = null;
+  @state() agentSkillsError: string | null = null;
+  @state() agentSkillsAgentId: string | null = null;
 
   @state() sessionsLoading = false;
   @state() sessionsResult: SessionsListResult | null = null;

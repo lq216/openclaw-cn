@@ -9,6 +9,8 @@ import type { UiSettings } from "./storage";
 import type { ThemeMode } from "./theme";
 import type { ThemeTransitionContext } from "./theme-transition";
 import type {
+  AgentIdentityResult,
+  AgentsFilesListResult,
   AgentsListResult,
   ChannelsStatusSnapshot,
   ConfigSnapshot,
@@ -110,6 +112,22 @@ export type AppViewState = {
   agentsLoading: boolean;
   agentsList: AgentsListResult | null;
   agentsError: string | null;
+  agentsSelectedId: string | null;
+  agentsPanel: "overview" | "files" | "tools" | "skills" | "channels" | "cron";
+  agentFilesLoading: boolean;
+  agentFilesError: string | null;
+  agentFilesList: AgentsFilesListResult | null;
+  agentFileActive: string | null;
+  agentFileContents: Record<string, string>;
+  agentFileDrafts: Record<string, string>;
+  agentFileSaving: boolean;
+  agentIdentityLoading: boolean;
+  agentIdentityError: string | null;
+  agentIdentityById: Record<string, AgentIdentityResult>;
+  agentSkillsLoading: boolean;
+  agentSkillsReport: SkillStatusReport | null;
+  agentSkillsError: string | null;
+  agentSkillsAgentId: string | null;
   sessionsLoading: boolean;
   sessionsResult: SessionsListResult | null;
   sessionsError: string | null;
