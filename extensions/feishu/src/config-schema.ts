@@ -13,6 +13,7 @@ const FeishuGroupSchema = z
     toolsBySender: toolsBySenderSchema,
     systemPrompt: z.string().optional(),
     skills: z.array(z.string()).optional(),
+    topicSessionMode: z.enum(["disabled", "enabled", "always", "mentioned"]).optional(),
   })
   .strict();
 
@@ -23,6 +24,8 @@ const FeishuAccountSchema = z
     appId: z.string().optional(),
     appSecret: z.string().optional(),
     appSecretFile: z.string().optional(),
+    encryptKey: z.string().optional(),
+    verificationToken: z.string().optional(),
     domain: z.string().optional(),
     botName: z.string().optional(),
     markdown: MarkdownConfigSchema,
@@ -38,6 +41,15 @@ const FeishuAccountSchema = z
     streaming: z.boolean().optional(),
     mediaMaxMb: z.number().optional(),
     responsePrefix: z.string().optional(),
+    connectionMode: z.enum(["websocket", "webhook"]).optional(),
+    webhookPort: z.number().optional(),
+    webhookPath: z.string().optional(),
+    topicSessionMode: z.enum(["disabled", "enabled", "always", "mentioned"]).optional(),
+    renderMode: z.enum(["auto", "text", "card", "raw"]).optional(),
+    requireMention: z.boolean().optional(),
+    tools: z.any().optional(),
+    dms: z.record(z.string(), z.any()).optional(),
+    dynamicAgentCreation: z.any().optional(),
     groups: z.record(z.string(), FeishuGroupSchema.optional()).optional(),
   })
   .strict();
