@@ -513,3 +513,61 @@ QMD:            14 项  ← 需对比评估
 4. **QMD 修复**：先读取本地 QMD 实现，判断上游修复是否已包含在本地代码中
 5. **合并后**：运行 `pnpm lint && pnpm build && pnpm test` 验证
 6. **提交消息格式**：`fix(security): <描述> (upstream #XXXX)` 或 `feat: <描述> (upstream #XXXX)`
+---
+
+## 自动扫描新增条目 (2026-02-16)
+
+| 状态 | 优先级 | 上游 PR | Release | 描述 | 类别 | 冲突风险 | 备注 |
+|------|--------|---------|---------|------|------|----------|------|
+| ⬜ | P0 | #N/A | v2026.X.X | Security: replace deprecated SHA-1 sandbox configuration hashing with SHA-256 | SECURITY | LOW | 安全修复，必须合并。 |
+| ⬜ | P0 | #N/A | v2026.X.X | Security/Logging: redact Telegram bot tokens from error messages and uncaught stack traces | SECURITY | LOW | 安全修复，防止密钥泄露。 |
+| ⬜ | P0 | #N/A | v2026.X.X | Sandbox/Security: block dangerous sandbox Docker config (bind mounts, host networking, unconfined seccomp/apparmor) | SECURITY | LOW | 安全修复，防止容器逃逸。 |
+| ⬜ | P0 | #8590 | v2026.X.X | Gateway/Security: redact sensitive session/path details from `status` responses for non-admin clients | SECURITY | LOW | 安全修复，权限控制。 |
+| ⬜ | P0 | #17587 | v2026.X.X | LINE/Security: fail closed on webhook startup when channel token or channel secret is missing | SECURITY | LOW | 安全修复，配置验证。 |
+| ⬜ | P0 | #N/A | v2026.X.X | Skills/Security: restrict `download` installer `targetDir` to the per-skill tools directory | SECURITY | LOW | 安全修复，防止任意文件写入。 |
+| ⬜ | P0 | #N/A | v2026.X.X | Web Fetch/Security: cap downloaded response body size before HTML parsing to prevent memory exhaustion | SECURITY | LOW | 安全修复，防止内存耗尽。 |
+| ⬜ | P0 | #N/A | v2026.X.X | Control UI: prevent stored XSS via assistant name/avatar by removing inline script injection | SECURITY | LOW | 安全修复，XSS防护。 |
+| ⬜ | P0 | #N/A | v2026.X.X | Agents/Security: sanitize workspace paths before embedding into LLM prompts | SECURITY | LOW | 安全修复，防止指令注入。 |
+| ⬜ | P0 | #N/A | v2026.X.X | Dev tooling: harden git `pre-commit` hook against option injection from malicious filenames | SECURITY | LOW | 安全修复，防止命令注入。 |
+| ⬜ | P1 | #17682 | v2026.X.X | Gateway/Control UI: preserve requested operator scopes for Control UI bypass modes | CRITICAL-BUG | MEDIUM | 核心网关/控制UI bug修复。 |
+| ⬜ | P1 | #17687 | v2026.X.X | Skills/Linux: harden go installer fallback on apt-based systems | CRITICAL-BUG | LOW | 核心技能系统bug修复。 |
+| ⬜ | P1 | #15707 | v2026.X.X | Gateway/Agent: reject malformed `agent:`-prefixed session keys | CRITICAL-BUG | LOW | 核心网关/代理路由bug修复。 |
+| ⬜ | P1 | #8593 | v2026.X.X | Gateway/Chat: harden `chat.send` inbound message handling by rejecting null bytes, stripping unsafe control characters, and normalizing Unicode to NFC | CRITICAL-BUG | LOW | 核心网关/聊天bug修复，涉及Unicode处理。 |
+| ⬜ | P1 | #15703 | v2026.X.X | Gateway/Send: return an actionable error when `send` targets internal-only `webchat` | CRITICAL-BUG | LOW | 核心网关bug修复。 |
+| ⬜ | P1 | #17693 | v2026.X.X | Agents/Sandbox: clarify system prompt path guidance so sandbox `bash/exec` uses container paths | CRITICAL-BUG | LOW | 核心代理/沙箱bug修复。 |
+| ⬜ | P1 | #17404 | v2026.X.X | Agents/Context: apply configured model `contextWindow` overrides after provider discovery | CRITICAL-BUG | LOW | 核心代理/上下文bug修复。 |
+| ⬜ | P1 | #17586 | v2026.X.X | Agents/Context: derive `lookupContextTokens()` from auth-available model metadata and keep the smallest discovered context window | CRITICAL-BUG | LOW | 核心代理/上下文bug修复。 |
+| ⬜ | P1 | #16803 | v2026.X.X | Agents/OpenAI: force `store=true` for direct OpenAI Responses/Codex runs | CRITICAL-BUG | LOW | 核心代理/OpenAI bug修复。 |
+| ⬜ | P1 | #16659 | v2026.X.X | Agents: return an explicit timeout error reply when an embedded run times out | CRITICAL-BUG | LOW | 核心代理bug修复。 |
+| ⬜ | P1 | #17673 | v2026.X.X | Browser/Agents: when browser control service is unavailable, return explicit non-retry guidance | CRITICAL-BUG | LOW | 核心代理/浏览器工具bug修复。 |
+| ⬜ | P1 | #17150 | v2026.X.X | Subagents: use child-run-based deterministic announce idempotency keys | CRITICAL-BUG | LOW | 核心子代理bug修复。 |
+| ⬜ | P1 | #N/A | v2026.X.X | Subagents/Models: preserve `agents.defaults.model.fallbacks` when subagent sessions carry a model override | CRITICAL-BUG | LOW | 核心子代理/模型回退bug修复。 |
+| ⬜ | P1 | #17603, #17633 | v2026.X.X | Auto-reply/Compaction: resolve `memory/YYYY-MM-DD.md` placeholders with timezone-aware runtime dates | CRITICAL-BUG | LOW | 核心自动回复/记忆压缩bug修复。 |
+| ⬜ | P1 | #17672 | v2026.X.X | Memory/FTS: make `buildFtsQuery` Unicode-aware so non-ASCII queries (including CJK) produce keyword tokens | CRITICAL-BUG | LOW | 核心记忆/FTS bug修复，涉及CJK/Unicode，必须合并。 |
+| ⬜ | P1 | #17194 | v2026.X.X | Memory/QMD: scope managed collection names per agent and precreate glob-backed collection directories before registration | CRITICAL-BUG | HIGH | 核心记忆/QMD bug修复，需对比本地实现。 |
+| ⬜ | P1 | #10942 | v2026.X.X | Telegram: omit `message_thread_id` for DM sends/draft previews | CHANNEL-FIX | LOW | Telegram bug修复，使用中渠道。 |
+| ⬜ | P1 | #16789 | v2026.X.X | Telegram: replace inbound `<media:audio>` placeholder with successful preflight voice transcript | CHANNEL-FIX | LOW | Telegram bug修复，使用中渠道。 |
+| ⬜ | P1 | #16154 | v2026.X.X | Telegram: retry inbound media `getFile` calls and gracefully fall back | CHANNEL-FIX | LOW | Telegram bug修复，使用中渠道。 |
+| ⬜ | P1 | #17218 | v2026.X.X | Telegram: finalize streaming preview replies in place instead of sending a second final message | CHANNEL-FIX | LOW | Telegram bug修复，使用中渠道，涉及流式输出。 |
+| ⬜ | P1 | #17679 | v2026.X.X | Telegram: disable block streaming when `channels.telegram.streamMode` is `off` | CHANNEL-FIX | LOW | Telegram bug修复，使用中渠道，涉及流式输出。 |
+| ⬜ | P1 | #17622 | v2026.X.X | Discord: preserve channel session continuity when runtime payloads omit `message.channelId` | CHANNEL-FIX | LOW | Discord bug修复，使用中渠道。 |
+| ⬜ | P1 | #17365 | v2026.X.X | Discord: dedupe native skill commands by skill name in multi-agent setups | CHANNEL-FIX | LOW | Discord bug修复，使用中渠道。 |
+| ⬜ | P1 | #N/A | v2026.X.X | Discord: ensure role allowlist matching uses raw role IDs for message routing authorization | CHANNEL-FIX | LOW | Discord bug修复，使用中渠道。 |
+| ⬜ | P1 | #17491 | v2026.X.X | Web UI/Agents: hide `BOOTSTRAP.md` in the Agents Files list after onboarding is completed | CHANNEL-FIX | LOW | Web UI bug修复，使用中渠道。 |
+| ⬜ | P1 | #7010 | v2026.X.X | Auto-reply/WhatsApp/TUI/Web: mirror the delivered messaging-tool text into session-visible assistant output | CHANNEL-FIX | LOW | WhatsApp/TUI/Web bug修复，使用中渠道。 |
+| ⬜ | P1 | #15664 | v2026.X.X | Cron: infer `payload.kind="agentTurn"` for model-only `cron.update` payload patches | CRITICAL-BUG | LOW | 核心Cron bug修复。 |
+| ⬜ | P1 | #4519 | v2026.X.X | TUI: make searchable-select filtering and highlight rendering ANSI-aware | CHANNEL-FIX | LOW | TUI bug修复，使用中渠道。 |
+| ⬜ | P1 | #4986 | v2026.X.X | TUI/Windows: coalesce rapid single-line submit bursts in Git Bash into one multiline message | CHANNEL-FIX | LOW | TUI bug修复，使用中渠道。 |
+| ⬜ | P1 | #5782 | v2026.X.X | TUI: suppress false `(no output)` placeholders for non-local empty final events during concurrent runs | CHANNEL-FIX | LOW | TUI bug修复，使用中渠道。 |
+| ⬜ | P1 | #17515, #17466, #17505 | v2026.X.X | TUI: preserve copy-sensitive long tokens (URLs/paths/file-like identifiers) during wrapping and overflow sanitization | CHANNEL-FIX | LOW | TUI bug修复，使用中渠道。 |
+| ⬜ | P1 | #16042 | v2026.X.X | Config/Gateway: make sensitive-key whitelist suffix matching case-insensitive while preserving `passwordFile` path exemptions | CRITICAL-BUG | LOW | 核心配置系统bug修复。 |
+| ⬜ | P1 | #N/A | v2026.X.X | Sandbox: preserve array order in config hashing so order-sensitive Docker/browser settings trigger container recreation correctly | CRITICAL-BUG | LOW | 核心沙箱bug修复。 |
+| 🔲 | P3 | #N/A | v2026.X.X | Discord: unlock rich interactive agent prompts with Components v2 (buttons, selects, modals, and attachment-backed file blocks) | NICE-TO-HAVE | MEDIUM | Discord新功能增强，可选合并。 |
+| 🔲 | P3 | #N/A | v2026.X.X | Discord: components v2 UI + embeds passthrough + exec approval UX refinements | NICE-TO-HAVE | MEDIUM | Discord新功能增强，可选合并。 |
+| 🔲 | P3 | #16724 | v2026.X.X | Plugins: expose `llm_input` and `llm_output` hook payloads | NICE-TO-HAVE | MEDIUM | 插件系统新功能，可选合并。 |
+| 🔲 | P3 | #14447 | v2026.X.X | Subagents: nested sub-agents (sub-sub-agents) with configurable depth | NICE-TO-HAVE | HIGH | 子代理新功能，可选合并。 |
+| 🔲 | P3 | #17092 | v2026.X.X | Slack/Discord/Telegram: add per-channel ack reaction overrides | NICE-TO-HAVE | LOW | 渠道UI增强，可选合并。 |
+| 🔲 | P3 | #14535 | v2026.X.X | Cron/Gateway: add finished-run webhook delivery toggle and dedicated webhook auth token support | NICE-TO-HAVE | MEDIUM | Cron/Gateway新功能，可选合并。 |
+| 🔲 | P3 | #16986 | v2026.X.X | Channels: deduplicate probe/token resolution base types across core + extensions | NICE-TO-HAVE | HIGH | 代码重构/类型整理，可选合并。 |
+| 🔲 | P3 | #14447 | v2026.X.X | Group chats: always inject group chat context into the system prompt on every turn | NICE-TO-HAVE | MEDIUM | 群聊功能增强，可选合并。 |
+| 🔲 | P3 | #N/A | v2026.X.X | CLI/Build: make legacy daemon CLI compatibility shim generation tolerant of minimal tsdown daemon export sets | NICE-TO-HAVE | MEDIUM | CLI构建改善，可选合并。 |
