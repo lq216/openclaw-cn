@@ -95,7 +95,7 @@ function snapshotMainSessionMapping(params: {
       entry: structuredClone(entry),
     };
   } catch (err) {
-    log.debug("boot: could not snapshot main session mapping", {
+    log.debug("boot: 无法快照主会话映射", {
       sessionKey: params.sessionKey,
       error: String(err),
     });
@@ -173,20 +173,20 @@ export async function runBootOnce(params: {
     );
   } catch (err) {
     agentFailure = err instanceof Error ? err.message : String(err);
-    log.error(`boot: agent run failed: ${agentFailure}`);
+    log.error(`boot: agent 运行失败: ${agentFailure}`);
   }
 
   const mappingRestoreFailure = await restoreMainSessionMapping(mappingSnapshot);
   if (mappingRestoreFailure) {
-    log.error(`boot: failed to restore main session mapping: ${mappingRestoreFailure}`);
+    log.error(`boot: 恢复主会话映射失败: ${mappingRestoreFailure}`);
   }
 
   if (!agentFailure && !mappingRestoreFailure) {
     return { status: "ran" };
   }
   const reasonParts = [
-    agentFailure ? `agent run failed: ${agentFailure}` : undefined,
-    mappingRestoreFailure ? `mapping restore failed: ${mappingRestoreFailure}` : undefined,
+    agentFailure ? `agent 运行失败: ${agentFailure}` : undefined,
+    mappingRestoreFailure ? `映射恢复失败: ${mappingRestoreFailure}` : undefined,
   ].filter((part): part is string => Boolean(part));
   return { status: "failed", reason: reasonParts.join("; ") };
 }
