@@ -92,7 +92,7 @@ export async function list(state: CronServiceState, opts?: { includeDisabled?: b
       }
     }
     const includeDisabled = opts?.includeDisabled === true;
-    const jobs = (state.store?.jobs ?? []).filter((j) => includeDisabled || j.enabled);
+    const jobs = (state.store?.jobs ?? []).filter((j) => includeDisabled || j.enabled !== false);
     return jobs.toSorted((a, b) => (a.state.nextRunAtMs ?? 0) - (b.state.nextRunAtMs ?? 0));
   });
 }
@@ -161,13 +161,13 @@ export async function update(state: CronServiceState, id: string, patch: CronJob
 
     job.updatedAtMs = now;
     if (scheduleChanged || enabledChanged) {
-      if (job.enabled) {
+      if (job.enabled !== false) {
         job.state.nextRunAtMs = computeJobNextRunAtMs(job, now);
       } else {
         job.state.nextRunAtMs = undefined;
         job.state.runningAtMs = undefined;
       }
-    } else if (job.enabled) {
+    } else if (job.enabled !== false) {
       // Non-schedule edits should not mutate other jobs, but still repair a
       // missing/corrupt nextRunAtMs for the updated job.
       const nextRun = job.state.nextRunAtMs;
