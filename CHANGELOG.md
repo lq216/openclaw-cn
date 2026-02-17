@@ -4,7 +4,7 @@ Docs: https://docs.clawd.bot
 
 ## 0.1.5
 
-> 🔒 **安全加固**：同步上游 73 项安全修复（P0-A + P0-B + P0-C），覆盖 v2026.2.1 ~ v2026.2.14 全部安全补丁。
+> 🔒 **安全加固**：同步上游 75 项安全修复（P0-A + P0-B + P0-C + P0-D），覆盖 v2026.2.1 ~ v2026.2.15 全部安全补丁。
 > 🐛 **关键 Bug 修复**：同步上游 48 项关键 Bug 修复（P1-A ~ P1-D），涵盖会话/网关/定时任务/心跳/内存/CJK 等核心稳定性问题。
 > ✨ **核心功能同步**：同步上游 37 项核心功能改进（P2-A ~ P2-E），覆盖 Agent/会话管理、Cron 增强、Config 改进等。
 > 🤖 **模型/Provider 支持**：同步上游 17 项模型与 Provider 支持（P3-A + P3-B），覆盖中国 Provider、新模型、国际 Provider 等。
@@ -141,6 +141,11 @@ Docs: https://docs.clawd.bot
 - **Telnyx webhook**：集中化 Telnyx webhook 验证，缺少公钥时默认拒绝（upstream `f47584fec`, `29b587e73`）
 - **Twilio webhook**：在 ngrok 回环模式下强制 Twilio 签名验证（upstream `ff11d8793`）
 - **Archive 提取加固**：加固 archive 提取 + 浏览器下载 + Signal 安装（upstream `3aa94afcf`）
+
+#### P0-D（v2026.2.15 安全批次）
+
+- **提示路径注入加固**：强化系统提示中的路径注入防护机制（upstream `93b9f1ec5fdf`）
+- **跨会话来源安全修复**：修复跨会话来源追踪的安全漏洞（upstream `e3445f59c986`）
 
 ### 🐛 关键 Bug 修复（Critical Bugs）
 
