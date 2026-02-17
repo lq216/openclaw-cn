@@ -503,9 +503,12 @@ export function resolveModelDirectiveSelection(params: {
 
 export function resolveContextTokens(params: {
   agentCfg: NonNullable<NonNullable<ClawdbotConfig["agents"]>["defaults"]> | undefined;
+  provider?: string;
   model: string;
 }): number {
   return (
-    params.agentCfg?.contextTokens ?? lookupContextTokens(params.model) ?? DEFAULT_CONTEXT_TOKENS
+    params.agentCfg?.contextTokens ??
+    lookupContextTokens(params.provider, params.model) ??
+    DEFAULT_CONTEXT_TOKENS
   );
 }

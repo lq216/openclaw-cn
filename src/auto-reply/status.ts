@@ -343,7 +343,7 @@ export function buildStatusMessage(args: StatusArgs): string {
   let contextTokens =
     entry?.contextTokens ??
     args.agent?.contextTokens ??
-    lookupContextTokens(model) ??
+    lookupContextTokens(provider, model) ??
     DEFAULT_CONTEXT_TOKENS;
 
   let inputTokens = entry?.inputTokens;
@@ -369,6 +369,7 @@ export function buildStatusMessage(args: StatusArgs): string {
         model = logUsage.model ?? model;
       }
       if (!contextTokens && logUsage.model) {
+        // Note: provider info not available from logUsage, using backward-compatible lookup
         contextTokens = lookupContextTokens(logUsage.model) ?? contextTokens;
       }
       if (!inputTokens || inputTokens === 0) {

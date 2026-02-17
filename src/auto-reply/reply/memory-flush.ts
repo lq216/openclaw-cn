@@ -67,11 +67,14 @@ function ensureNoReplyHint(text: string): string {
 }
 
 export function resolveMemoryFlushContextWindowTokens(params: {
+  providerId?: string;
   modelId?: string;
   agentCfgContextTokens?: number;
 }): number {
   return (
-    lookupContextTokens(params.modelId) ?? params.agentCfgContextTokens ?? DEFAULT_CONTEXT_TOKENS
+    lookupContextTokens(params.providerId, params.modelId) ??
+    params.agentCfgContextTokens ??
+    DEFAULT_CONTEXT_TOKENS
   );
 }
 

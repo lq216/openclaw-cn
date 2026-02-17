@@ -72,10 +72,11 @@ export async function getStatusSummary(): Promise<StatusSummary> {
     defaultProvider: DEFAULT_PROVIDER,
     defaultModel: DEFAULT_MODEL,
   });
+  const configProvider = resolved.provider ?? DEFAULT_PROVIDER;
   const configModel = resolved.model ?? DEFAULT_MODEL;
   const configContextTokens =
     cfg.agents?.defaults?.contextTokens ??
-    lookupContextTokens(configModel) ??
+    lookupContextTokens(configProvider, configModel) ??
     DEFAULT_CONTEXT_TOKENS;
 
   const now = Date.now();
@@ -97,8 +98,12 @@ export async function getStatusSummary(): Promise<StatusSummary> {
         const updatedAt = entry?.updatedAt ?? null;
         const age = updatedAt ? now - updatedAt : null;
         const model = entry?.model ?? configModel ?? null;
+        const provider = entry?.modelProvider ?? configProvider ?? null;
         const contextTokens =
-          entry?.contextTokens ?? lookupContextTokens(model) ?? configContextTokens ?? null;
+          entry?.contextTokens ??
+          lookupContextTokens(provider, model) ??
+          configContextTokens ??
+          null;
         const total = resolveFreshSessionTotalTokens(entry);
         const totalTokensFresh =
           typeof entry?.totalTokens === "number" ? entry?.totalTokensFresh !== false : false;

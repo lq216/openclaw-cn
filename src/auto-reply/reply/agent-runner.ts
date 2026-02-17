@@ -205,6 +205,7 @@ export async function runReplyAgent(params: {
     sessionCtx,
     opts,
     defaultModel,
+    defaultProvider: followupRun.run.provider,
     agentCfgContextTokens,
     resolvedVerboseLevel,
     sessionEntry: activeSessionEntry,
@@ -374,7 +375,7 @@ export async function runReplyAgent(params: {
       : undefined;
     const contextTokensUsed =
       agentCfgContextTokens ??
-      lookupContextTokens(modelUsed) ??
+      lookupContextTokens(providerUsed, modelUsed) ??
       activeSessionEntry?.contextTokens ??
       DEFAULT_CONTEXT_TOKENS;
 
