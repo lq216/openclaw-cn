@@ -15,6 +15,6 @@ export function buildPairingReply(params: {
     `配对码: ${code}`,
     "",
     "请让机器人所有者执行以下命令批准:",
-    formatCliCommand(`openclaw-cn pairing approve ${channel} <code>`),
+    formatCliCommand(`openclaw-cn pairing approve ${channel} ${code}`),
   ].join("\n");
 }

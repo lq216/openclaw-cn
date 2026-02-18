@@ -35,8 +35,8 @@ describe("buildPairingReply", () => {
     it(`formats pairing reply for ${testCase.channel}`, () => {
       const text = buildPairingReply(testCase);
       expect(text).toContain(testCase.idLine);
-      expect(text).toContain(`Pairing code: ${testCase.code}`);
-      expect(text).toContain(`openclaw-cn pairing approve ${testCase.channel} <code>`);
+      expect(text).toContain(`配对码: ${testCase.code}`);
+      expect(text).toContain(`openclaw-cn pairing approve ${testCase.channel} ${testCase.code}`);
     });
   }
 });
