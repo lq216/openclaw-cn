@@ -282,14 +282,14 @@ export const buildTelegramMessageContext = async ({
                   bot.api.sendMessage(
                     chatId,
                     [
-                      "OpenClaw: access not configured.",
+                      "Openclaw: 访问未配置。",
                       "",
-                      `Your Telegram user id: ${telegramUserId}`,
+                      `你的 Telegram 用户 ID：${telegramUserId}`,
                       "",
-                      `Pairing code: ${code}`,
+                      `配对码：${code}`,
                       "",
-                      "Ask the bot owner to approve with:",
-                      formatCliCommand("openclaw pairing approve telegram <code>"),
+                      "请让机器人所有者执行以下命令批准：",
+                      formatCliCommand(`openclaw-cn pairing approve telegram ${code}`),
                     ].join("\n"),
                   ),
               });
