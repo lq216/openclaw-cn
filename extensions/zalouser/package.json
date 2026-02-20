@@ -1,11 +1,11 @@
 {
   "name": "@clawdbot/zalouser",
-  "version": "0.1.5-fix.2",
-  "type": "module",
+  "version": "0.1.6",
   "description": "Clawdbot Zalo Personal Account plugin via zca-cli",
+  "type": "module",
   "dependencies": {
-    "clawdbot": "workspace:openclaw-cn@*",
-    "@sinclair/typebox": "0.34.47"
+    "@sinclair/typebox": "0.34.47",
+    "clawdbot": "workspace:openclaw-cn@*"
   },
   "clawdbot": {
     "extensions": [

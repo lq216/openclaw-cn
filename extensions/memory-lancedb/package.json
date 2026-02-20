@@ -1,8 +1,8 @@
 {
   "name": "@clawdbot/memory-lancedb",
-  "version": "0.1.5-fix.2",
-  "type": "module",
+  "version": "0.1.6",
   "description": "Clawdbot LanceDB-backed long-term memory plugin with auto-recall/capture",
+  "type": "module",
   "dependencies": {
     "@lancedb/lancedb": "^0.23.0",
     "@sinclair/typebox": "0.34.47",

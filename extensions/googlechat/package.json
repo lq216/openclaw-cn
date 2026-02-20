@@ -1,8 +1,17 @@
 {
   "name": "@clawdbot/googlechat",
-  "version": "0.1.5-fix.2",
-  "type": "module",
+  "version": "0.1.6",
   "description": "Clawdbot Google Chat channel plugin",
+  "type": "module",
+  "dependencies": {
+    "google-auth-library": "^10.5.0"
+  },
+  "devDependencies": {
+    "clawdbot": "workspace:openclaw-cn@*"
+  },
+  "peerDependencies": {
+    "clawdbot": ">=2026.1.25"
+  },
   "clawdbot": {
     "extensions": [
       "./index.ts"
@@ -26,14 +35,5 @@
       "localPath": "extensions/googlechat",
       "defaultChoice": "npm"
     }
-  },
-  "dependencies": {
-    "google-auth-library": "^10.5.0"
-  },
-  "devDependencies": {
-    "clawdbot": "workspace:openclaw-cn@*"
-  },
-  "peerDependencies": {
-    "clawdbot": ">=2026.1.25"
   }
 }

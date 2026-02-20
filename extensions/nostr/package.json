@@ -1,8 +1,13 @@
 {
   "name": "@clawdbot/nostr",
-  "version": "0.1.5-fix.2",
-  "type": "module",
+  "version": "0.1.6",
   "description": "Clawdbot Nostr channel plugin for NIP-04 encrypted DMs",
+  "type": "module",
+  "dependencies": {
+    "clawdbot": "workspace:openclaw-cn@*",
+    "nostr-tools": "^2.20.0",
+    "zod": "^4.3.6"
+  },
   "clawdbot": {
     "extensions": [
       "./index.ts"
@@ -22,10 +27,5 @@
       "localPath": "extensions/nostr",
       "defaultChoice": "npm"
     }
-  },
-  "dependencies": {
-    "clawdbot": "workspace:openclaw-cn@*",
-    "nostr-tools": "^2.20.0",
-    "zod": "^4.3.6"
   }
 }

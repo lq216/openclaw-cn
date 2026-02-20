@@ -18,14 +18,25 @@ fi
 
 # 安全性：避免恶意文件名（例如 "--all"、"--force"）导致的选项注入。
 # 健壮性：NUL 分隔的文件列表可安全处理包含空格/换行的文件名。
-mapfile -d '' -t files < <(git diff --cached --name-only --diff-filter=ACMR -z)
+# 兼容 Bash 3.2（macOS 默认版本），使用 while read 替代 mapfile
+files=()
+while IFS= read -r -d '' file; do
+  files+=("$file")
+done < <(git diff --cached --name-only --diff-filter=ACMR -z)
 
 if [ "${#files[@]}" -eq 0 ]; then
   exit 0
 fi
 
-mapfile -d '' -t lint_files < <(node "$FILTER_FILES" lint -- "${files[@]}")
-mapfile -d '' -t format_files < <(node "$FILTER_FILES" format -- "${files[@]}")
+lint_files=()
+while IFS= read -r -d '' file; do
+  lint_files+=("$file")
+done < <(node "$FILTER_FILES" lint -- "${files[@]}")
+
+format_files=()
+while IFS= read -r -d '' file; do
+  format_files+=("$file")
+done < <(node "$FILTER_FILES" format -- "${files[@]}")
 
 if [ "${#lint_files[@]}" -gt 0 ]; then
   "$RUN_NODE_TOOL" oxlint --type-aware --fix -- "${lint_files[@]}"

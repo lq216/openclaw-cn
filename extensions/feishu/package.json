@@ -1,21 +1,58 @@
 {
   "name": "@openclaw-cn/feishu",
-  "version": "0.1.5-fix.2",
+  "version": "0.1.6",
+  "description": "Feishu (Larksuite) channel plugin for OpenClaw Chinese",
+  "keywords": [
+    "feishu",
+    "larksuite",
+    "openclaw",
+    "plugin"
+  ],
+  "homepage": "https://github.com/openclaw/openclaw-cn/tree/main/extensions/feishu",
+  "bugs": {
+    "url": "https://github.com/openclaw/openclaw-cn/issues"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/openclaw/openclaw-cn.git",
+    "directory": "extensions/feishu"
+  },
+  "files": [
+    "openclaw.plugin.json",
+    "package.json",
+    "README.md",
+    "dist/"
+  ],
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
     }
   },
-  "files": [
-    "dist/",
-    "openclaw.plugin.json",
-    "package.json",
-    "README.md"
-  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist"
+  },
+  "peerDependencies": {
+    "openclaw": "*",
+    "openclaw-cn": "*"
+  },
+  "peerDependenciesMeta": {
+    "openclaw": {
+      "optional": true
+    },
+    "openclaw-cn": {
+      "optional": true
+    }
+  },
   "openclaw": {
     "extensions": [
       "./dist/index.js"
@@ -38,42 +75,5 @@
       "localPath": "extensions/feishu",
       "defaultChoice": "local"
     }
-  },
-  "description": "Feishu (Larksuite) channel plugin for OpenClaw Chinese",
-  "keywords": [
-    "openclaw",
-    "plugin",
-    "feishu",
-    "larksuite"
-  ],
-  "license": "MIT",
-  "homepage": "https://github.com/openclaw/openclaw-cn/tree/main/extensions/feishu",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/openclaw/openclaw-cn.git",
-    "directory": "extensions/feishu"
-  },
-  "bugs": {
-    "url": "https://github.com/openclaw/openclaw-cn/issues"
-  },
-  "scripts": {
-    "build": "tsc",
-    "clean": "rm -rf dist"
-  },
-  "peerDependencies": {
-    "openclaw": "*",
-    "openclaw-cn": "*"
-  },
-  "peerDependenciesMeta": {
-    "openclaw": {
-      "optional": true
-    },
-    "openclaw-cn": {
-      "optional": true
-    }
-  },
-  "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.org/"
   }
 }

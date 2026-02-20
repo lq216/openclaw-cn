@@ -1,88 +1,111 @@
 # Changelog
 
+## 0.1.6
+
+### Changes
+
+- Version alignment with core Clawdbot release numbers.
+
 ## 0.1.5-fix.2
 
 ### Changes
+
 - Version alignment with core Clawdbot release numbers.
 
 ## 0.1.5
 
 ### Changes
+
 - Version alignment with core Clawdbot release numbers.
 
 ## 0.1.4
 
 ### Changes
+
 - Version alignment with core Clawdbot release numbers.
 
 ## 0.1.1
 
 ### Changes
+
 - Version alignment with core Clawdbot release numbers.
 
 ## 0.1.0
 
 ### Changes
+
 - Version alignment with core Clawdbot release numbers.
 
 ## 2026.2.2
 
 ### Changes
+
 - Version alignment with core Clawdbot release numbers.
 
 ## 2026.1.31-beta.1
 
 ### Changes
+
 - Version alignment with core Clawdbot release numbers.
 
 ## 2026.1.31-beta.0
 
 ### Changes
+
 - Version alignment with core Clawdbot release numbers.
 
 ## 2026.1.23
 
 ### Changes
+
 - Version alignment with core Clawdbot release numbers.
 
 ## 2026.1.22
 
 ### Changes
+
 - Version alignment with core Clawdbot release numbers.
 
 ## 2026.1.21
 
 ### Changes
+
 - Version alignment with core Clawdbot release numbers.
 
 ## 2026.1.20
 
 ### Changes
+
 - Version alignment with core Clawdbot release numbers.
 
 ## 2026.1.17-1
 
 ### Changes
+
 - Version alignment with core Clawdbot release numbers.
 
 ## 2026.1.17
 
 ### Changes
+
 - Version alignment with core Clawdbot release numbers.
 
 ## 2026.1.16
 
 ### Changes
+
 - Version alignment with core Clawdbot release numbers.
 
 ## 2026.1.15
 
 ### Changes
+
 - Version alignment with core Clawdbot release numbers.
 
 ## 2026.1.14
 
 ### Features
+
 - Version alignment with core Clawdbot release numbers.
 - Matrix channel plugin with homeserver + user ID auth (access token or password login with device name).
 - Direct messages with pairing/allowlist/open/disabled policies and allowFrom support.

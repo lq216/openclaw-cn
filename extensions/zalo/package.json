@@ -1,8 +1,12 @@
 {
   "name": "@clawdbot/zalo",
-  "version": "0.1.5-fix.2",
-  "type": "module",
+  "version": "0.1.6",
   "description": "Clawdbot Zalo channel plugin",
+  "type": "module",
+  "dependencies": {
+    "clawdbot": "workspace:openclaw-cn@*",
+    "undici": "7.19.0"
+  },
   "clawdbot": {
     "extensions": [
       "./index.ts"
@@ -25,9 +29,5 @@
       "localPath": "extensions/zalo",
       "defaultChoice": "npm"
     }
-  },
-  "dependencies": {
-    "clawdbot": "workspace:openclaw-cn@*",
-    "undici": "7.19.0"
   }
 }
