@@ -43,13 +43,19 @@ jobs:
       - name: Determine npm tag
         id: npm-tag
         run: |
-          VERSION=$(node -p "require('./package.json').version")
-          if [[ "$VERSION" == *"-test"* ]]; then
+          # Extract version from git tag (e.g., v0.1.6-test.1 -> 0.1.6-test.1)
+          GIT_TAG=${GITHUB_REF#refs/tags/v}
+          echo "Git tag version: $GIT_TAG"
+          
+          if [[ "$GIT_TAG" == *"-test"* ]]; then
             echo "tag=test" >> $GITHUB_OUTPUT
-          elif [[ "$VERSION" == *"-beta"* ]]; then
+            echo "Publishing to test channel"
+          elif [[ "$GIT_TAG" == *"-beta"* ]]; then
             echo "tag=beta" >> $GITHUB_OUTPUT
+            echo "Publishing to beta channel"
           else
             echo "tag=latest" >> $GITHUB_OUTPUT
+            echo "Publishing to latest channel"
           fi
 
       - name: Publish to npm
