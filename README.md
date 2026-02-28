@@ -111,6 +111,7 @@ pnpm openclaw-cn onboard --install-daemon
   <a href="https://github.com/dragonforce2010"><img src="https://avatars.githubusercontent.com/dragonforce2010?v=4" width="48" height="48" alt="dragonforce2010" /></a>
   <a href="https://github.com/yanghua"><img src="https://avatars.githubusercontent.com/yanghua?v=4" width="48" height="48" alt="yanghua" /></a>
   <a href="https://github.com/qqdxyg"><img src="https://avatars.githubusercontent.com/qqdxyg?v=4" width="48" height="48" alt="qqdxyg" /></a>
+  <a href="https://github.com/ddupg"><img src="https://avatars.githubusercontent.com/ddupg?v=4" width="48" height="48" alt="ddupg" /></a>
 </p>
 
 ## 📋 开发计划

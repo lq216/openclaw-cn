@@ -8,6 +8,7 @@ Docs: https://clawd.org.cn/
 - **Doubao Embedding Provider**：Memory LanceDB 新增 Doubao 向量模型支持（#448，感谢 @yanghua）
 - **Coding Plan 支持**：新增阿里云百炼 Coding Plan 选项，支持 OpenAI/Anthropic 兼容协议
 - **技能加载安全钩子修复**：before_skills_load 处理安全阻断与配置一致性修复（#452，感谢 @qqdxyg）
+- **Memory LanceDB 云存储支持**：新增 `storageOptions` 配置项，支持 S3/GCS 等云对象存储后端（#454，感谢 @ddupg）
 
 ### bug修复
 
