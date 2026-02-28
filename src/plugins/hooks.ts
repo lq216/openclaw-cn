@@ -33,6 +33,9 @@ import type {
   PluginHookToolResultPersistContext,
   PluginHookToolResultPersistEvent,
   PluginHookToolResultPersistResult,
+  PluginHookBeforeSkillsLoadContext,
+  PluginHookBeforeSkillsLoadEvent,
+  PluginHookBeforeSkillsLoadResult,
 } from "./types.js";
 
 // Re-export types for consumers
@@ -224,6 +227,24 @@ export function createHookRunner(registry: PluginRegistry, options: HookRunnerOp
     ctx: PluginHookAgentContext,
   ): Promise<void> {
     return runVoidHook("after_compaction", event, ctx);
+  }
+
+  async function runBeforeSkillsLoad(
+    event: PluginHookBeforeSkillsLoadEvent,
+    ctx: PluginHookBeforeSkillsLoadContext,
+  ): Promise<PluginHookBeforeSkillsLoadResult | undefined> {
+    return runModifyingHook<"before_skills_load", PluginHookBeforeSkillsLoadResult>(
+      "before_skills_load",
+      event,
+      ctx,
+      (acc, next) => ({
+        blocked:
+          acc?.blocked === true || next.blocked === true ? true : (acc?.blocked ?? next.blocked),
+        securityInfo: next.securityInfo ?? acc?.securityInfo,
+        riskScore: next.riskScore ?? acc?.riskScore,
+        severity: next.severity ?? acc?.severity,
+      }),
+    );
   }
 
   // =========================================================================
@@ -437,6 +458,8 @@ export function createHookRunner(registry: PluginRegistry, options: HookRunnerOp
     runAgentEnd,
     runBeforeCompaction,
     runAfterCompaction,
+    // Skills hooks
+    runBeforeSkillsLoad,
     // Message hooks
     runMessageReceived,
     runMessageSending,
