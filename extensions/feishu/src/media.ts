@@ -210,33 +210,50 @@ export async function uploadImageFeishu(params: {
 
   const client = createFeishuClient(account);
 
-  // SDK accepts Buffer directly or fs.ReadStream for file paths
-  // Using Readable.from(buffer) causes issues with form-data library
-  // See: https://github.com/larksuite/node-sdk/issues/121
-  const imageData = typeof image === "string" ? fs.createReadStream(image) : image;
-
-  const response = await client.im.image.create({
-    data: {
-      image_type: imageType,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- SDK accepts Buffer or ReadStream
-      image: imageData as any,
-    },
-  });
-
-  // SDK v1.30+ returns data directly without code wrapper on success
-  // On error, it throws or returns { code, msg }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- SDK response type
-  const responseAny = response as any;
-  if (responseAny.code !== undefined && responseAny.code !== 0) {
-    throw new Error(`Feishu image upload failed: ${responseAny.msg || `code ${responseAny.code}`}`);
+  // form-data (axios 0.27) requires a ReadStream; raw Buffer causes
+  // "source.on is not a function". Readable.from() also fails.
+  // Write Buffer to a temp file so we can pass a real ReadStream.
+  let tmpPath: string | undefined;
+  let imageData: fs.ReadStream;
+  if (typeof image === "string") {
+    imageData = fs.createReadStream(image);
+  } else {
+    tmpPath = path.join(
+      os.tmpdir(),
+      `feishu_img_${Date.now()}_${Math.random().toString(36).slice(2)}`,
+    );
+    fs.writeFileSync(tmpPath, image);
+    imageData = fs.createReadStream(tmpPath);
   }
 
-  const imageKey = responseAny.image_key ?? responseAny.data?.image_key;
-  if (!imageKey) {
-    throw new Error("Feishu image upload failed: no image_key returned");
-  }
+  try {
+    const response = await client.im.image.create({
+      data: {
+        image_type: imageType,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- SDK accepts ReadStream
+        image: imageData as any,
+      },
+    });
 
-  return { imageKey };
+    // SDK v1.30+ returns data directly without code wrapper on success
+    // On error, it throws or returns { code, msg }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- SDK response type
+    const responseAny = response as any;
+    if (responseAny.code !== undefined && responseAny.code !== 0) {
+      throw new Error(
+        `Feishu image upload failed: ${responseAny.msg || `code ${responseAny.code}`}`,
+      );
+    }
+
+    const imageKey = responseAny.image_key ?? responseAny.data?.image_key;
+    if (!imageKey) {
+      throw new Error("Feishu image upload failed: no image_key returned");
+    }
+
+    return { imageKey };
+  } finally {
+    if (tmpPath) fs.promises.unlink(tmpPath).catch(() => {});
+  }
 }
 
 /**
@@ -259,34 +276,50 @@ export async function uploadFileFeishu(params: {
 
   const client = createFeishuClient(account);
 
-  // SDK accepts Buffer directly or fs.ReadStream for file paths
-  // Using Readable.from(buffer) causes issues with form-data library
-  // See: https://github.com/larksuite/node-sdk/issues/121
-  const fileData = typeof file === "string" ? fs.createReadStream(file) : file;
-
-  const response = await client.im.file.create({
-    data: {
-      file_type: fileType,
-      file_name: fileName,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- SDK accepts Buffer or ReadStream
-      file: fileData as any,
-      ...(duration !== undefined && { duration }),
-    },
-  });
-
-  // SDK v1.30+ returns data directly without code wrapper on success
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- SDK response type
-  const responseAny = response as any;
-  if (responseAny.code !== undefined && responseAny.code !== 0) {
-    throw new Error(`Feishu file upload failed: ${responseAny.msg || `code ${responseAny.code}`}`);
+  // form-data (axios 0.27) requires a ReadStream; raw Buffer causes
+  // "source.on is not a function". Write to temp file first.
+  let tmpPath: string | undefined;
+  let fileData: fs.ReadStream;
+  if (typeof file === "string") {
+    fileData = fs.createReadStream(file);
+  } else {
+    tmpPath = path.join(
+      os.tmpdir(),
+      `feishu_file_${Date.now()}_${Math.random().toString(36).slice(2)}`,
+    );
+    fs.writeFileSync(tmpPath, file);
+    fileData = fs.createReadStream(tmpPath);
   }
 
-  const fileKey = responseAny.file_key ?? responseAny.data?.file_key;
-  if (!fileKey) {
-    throw new Error("Feishu file upload failed: no file_key returned");
-  }
+  try {
+    const response = await client.im.file.create({
+      data: {
+        file_type: fileType,
+        file_name: fileName,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- SDK accepts ReadStream
+        file: fileData as any,
+        ...(duration !== undefined && { duration }),
+      },
+    });
 
-  return { fileKey };
+    // SDK v1.30+ returns data directly without code wrapper on success
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- SDK response type
+    const responseAny = response as any;
+    if (responseAny.code !== undefined && responseAny.code !== 0) {
+      throw new Error(
+        `Feishu file upload failed: ${responseAny.msg || `code ${responseAny.code}`}`,
+      );
+    }
+
+    const fileKey = responseAny.file_key ?? responseAny.data?.file_key;
+    if (!fileKey) {
+      throw new Error("Feishu file upload failed: no file_key returned");
+    }
+
+    return { fileKey };
+  } finally {
+    if (tmpPath) fs.promises.unlink(tmpPath).catch(() => {});
+  }
 }
 
 /**
