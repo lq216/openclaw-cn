@@ -906,7 +906,7 @@ export function renderApp(state: AppViewState) {
                   }
                   const agents = (configValue as { agents?: { list?: unknown[] } }).agents || {};
                   const list = (agents as { list?: unknown[] }).list || [];
-                  let index = list.findIndex(
+                  const index = list.findIndex(
                     (entry) =>
                       entry &&
                       typeof entry === "object" &&
@@ -918,13 +918,20 @@ export function renderApp(state: AppViewState) {
                     if (!modelId) {
                       return;
                     }
-                    index = list.length;
                     updateConfigFormValue(
                       state as unknown as ConfigState,
-                      ["agents", "list", index],
+                      ["agents", "list", list.length],
                       {
                         id: agentId,
                         model: modelId,
+                        memorySearch: { enabled: false },
+                        heartbeat: { every: "1h" },
+                        identity: { name: agentId, avatar: "" },
+                        groupChat: {},
+                        tools: {
+                          profile: "minimal",
+                        },
+                        sandbox: {},
                       },
                     );
                     return;
@@ -974,6 +981,14 @@ export function renderApp(state: AppViewState) {
                       {
                         id: agentId,
                         model: { fallbacks: normalized },
+                        memorySearch: { enabled: false },
+                        heartbeat: { every: "1h" },
+                        identity: { name: agentId, avatar: "" },
+                        groupChat: {},
+                        tools: {
+                          profile: "minimal",
+                        },
+                        sandbox: {},
                       },
                     );
                     return;
