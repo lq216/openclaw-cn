@@ -3,7 +3,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { ClawdbotConfig } from "../config/config.js";
 
 const note = vi.hoisted(() => vi.fn());
-const pluginRegistry = vi.hoisted(() => ({ list: [] as unknown[] }));
 
 vi.mock("../terminal/note.js", () => ({
   note,
