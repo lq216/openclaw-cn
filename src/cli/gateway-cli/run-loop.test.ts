@@ -8,6 +8,7 @@ const isGatewaySigusr1RestartExternallyAllowed = vi.fn(() => false);
 const getActiveTaskCount = vi.fn(() => 0);
 const waitForActiveTasks = vi.fn(async () => ({ drained: true }));
 const resetAllLanes = vi.fn();
+const markShuttingDown = vi.fn();
 const DRAIN_TIMEOUT_LOG = "drain timeout reached; proceeding with restart";
 const gatewayLog = {
   info: vi.fn(),
@@ -28,6 +29,7 @@ vi.mock("../../process/command-queue.js", () => ({
   getActiveTaskCount: () => getActiveTaskCount(),
   waitForActiveTasks: (timeoutMs: number) => waitForActiveTasks(timeoutMs),
   resetAllLanes: () => resetAllLanes(),
+  markShuttingDown: () => markShuttingDown(),
 }));
 
 vi.mock("../../logging/subsystem.js", () => ({
@@ -100,7 +102,7 @@ describe("runGatewayLoop", () => {
         reason: "gateway restarting",
         restartExpectedMs: 1500,
       });
-      expect(resetAllLanes).toHaveBeenCalledTimes(1);
+      expect(resetAllLanes).toHaveBeenCalledTimes(2);
 
       process.emit("SIGUSR1");
 
@@ -109,7 +111,7 @@ describe("runGatewayLoop", () => {
         reason: "gateway restarting",
         restartExpectedMs: 1500,
       });
-      expect(resetAllLanes).toHaveBeenCalledTimes(2);
+      expect(resetAllLanes).toHaveBeenCalledTimes(3);
     } finally {
       removeNewSignalListeners("SIGTERM", beforeSigterm);
       removeNewSignalListeners("SIGINT", beforeSigint);

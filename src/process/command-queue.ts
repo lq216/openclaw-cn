@@ -274,6 +274,7 @@ export function scheduleLaneDrainByName(lane: string): void {
 }
 
 export function resetAllLanes(): void {
+  isShuttingDown = false;
   const backend = queueBackend();
   const affectedLanes = backend.recoverRunningTasks();
   const pendingLanes = backend.getPendingLanes();

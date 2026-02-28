@@ -120,21 +120,21 @@ export async function runGatewayLoop(params: {
   process.on("SIGUSR1", onSigusr1);
 
   try {
-    const onIteration = createRestartIterationHook(() => {
-      // After an in-process restart (SIGUSR1), reset command-queue lane state.
-      // Interrupted tasks from the previous lifecycle may have left `active`
-      // counts elevated (their finally blocks never ran), permanently blocking
-      // new work from draining. This must happen here — at the restart
-      // coordinator level — rather than inside individual subsystem init
-      // functions, to avoid surprising cross-cutting side effects.
-      resetAllLanes();
-    });
+    // Reset logic (resetAllLanes) now lives unconditionally in the loop
+    // body below so it also covers the first iteration, where node --watch
+    // may have delivered a SIGTERM that set isShuttingDown before startup.
+    const onIteration = createRestartIterationHook(() => {});
 
     // Keep process alive; SIGUSR1 triggers an in-process restart (no supervisor required).
     // SIGTERM/SIGINT still exit after a graceful shutdown.
     // eslint-disable-next-line no-constant-condition
     while (true) {
       onIteration();
+      // Always reset shutdown flag and lane state at the start of each
+      // iteration.  node --watch sends SIGTERM during restart which sets
+      // isShuttingDown before the gateway has a chance to start.  On
+      // first startup this is a safe no-op for the memory backend.
+      resetAllLanes();
       server = await params.start();
       await new Promise<void>((resolve) => {
         restartResolver = resolve;
